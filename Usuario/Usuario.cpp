@@ -375,7 +375,7 @@ bool Users::checkLog(){
     ifstream archivo("C:\\Visual Proyect\\Proyecto_Blim\\Usuario\\users.txt", ios::in);
     if (!archivo.good())
     {
-        cout << "\n El archivo no existe..  ..." << endl;
+        cout << "\n El archivo no existe....." << endl;
     }
     else
     {
@@ -386,11 +386,9 @@ bool Users::checkLog(){
         {
             archivo.read((char *)&OrdCom, sizeof(OrdCom));
             if (archivo.eof())
-            {
 
                 break;
-            }
-            if (!strcmp(userName, valor))
+            if (strcmp(userName, valor)==0)
             {
                 find = true;
                 char buffer[35];
@@ -400,7 +398,7 @@ bool Users::checkLog(){
                     cout<<"INVALID PASSWORD"<<endl;
                     return false;
                 }
-                cout<<this->admin<<"  "<<OrdCom.admin<<endl;
+                //cout<<this->admin<<"  "<<OrdCom.admin<<endl;
                 if(this->admin){
                     typeLog = true;
                 }else if(!this->admin){
@@ -423,7 +421,7 @@ void LogIn(){
         bool log = false;
         log = OrdCom.checkLog();
         if (log) {
-            cout<<"Debug: Inicio de Sesion exitoso"<<endl;
+            //cout<<"Debug: Inicio de Sesion exitoso"<<endl;
             if(!typeLog)
                 menuUser();
             if(typeLog)
@@ -504,8 +502,8 @@ void menuUser(){
         cout << "BIENVENIDO " <<OrdCom.getUser()<< endl;
         cout << "1.-Ver Peliculas" << endl;
         cout << "2.-Ver Series" << endl;
-        cout << "3.-Modificar " << endl;
-        cout << "4.-Eliminar" << endl;
+        cout << "3.-Listas de Reproduccion " << endl;
+        cout << "4.-Historial" << endl;
         cout << "5.-Buscar " << endl;
         cout << "6.-Cerrar Sesion " << endl;
         cout << "Ingresa la opcion->";
@@ -515,7 +513,7 @@ void menuUser(){
         {
         case 1:
             system("cls");
-            objeto.Imprimir();
+            movies.Imprimir();
             system("pause");
             break;
         case 2:
