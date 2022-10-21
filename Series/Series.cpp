@@ -9,129 +9,113 @@ class Series
 {
 public:
     char codigo[10], nombre[100], temporadas[15], capitulos[15], descripcion[200], publicObj[15];
-    // public:
+    char delim = '\n';
+    bool checkID(char *);
     void Agregar();
     void Mostrar();
     void Modificar();
     void Eliminar();
     void Buscar();
     void menu();
-    void Recovery();
-    void ChangeCont();
-} pr;
+    void setters(char *, char *, char *, char *, char *, char *);
+} serie;
 
-int dim1, dim2, dim3, dim4, dim5, dim6, opc = 0;
-int cont = 0;
-void Series::Recovery()
+int opc = 0;
+
+bool Series::checkID(char *_codigo)
 {
-    int temp;
-    ifstream Archivo("Cont.txt", ios::app);
-    if (!Archivo.good())
+    bool band = false;
+    string buffer1;
+    string buffer2;
+    buffer1 = _codigo;
+    ifstream arc("C:\\Visual Proyect\\Proyecto_Blim\\Series\\Series.txt");
+    if (!arc.good())
     {
-        cout << "\nEl archivo no existe...";
-        ofstream Archivo("Cont.txt", ios::app);
-        Archivo << 0;
-        return;
+        // cout << "\nEl archivo no existe";
     }
     else
     {
-        Archivo >> temp;
-        cont = temp;
+        while (!arc.eof())
+        {
+            arc.read((char *)&serie, sizeof(serie));
+            buffer2 = codigo;
+            if (arc.eof())
+                break;
+            if (buffer1 == buffer2)
+            {
+                cout << "Se encontraron coincidencias por favor intente con otro codigo" << endl;
+                band = true;
+            }
+        }
     }
-    Archivo.close();
+    arc.close();
+    return band;
 }
-void Series::ChangeCont()
+void Series::setters(char *_codigo, char *_nombre, char *_temporadas, char *_capitulos, char *_descripcion, char *_publicObj)
 {
-    ofstream temporal("temporal.txt", ios::app);
-    temporal << cont;
-    temporal.close();
-    remove("Cont.txt");
-    rename("temporal.txt", "Cont.txt");
+    strcpy(this->codigo, _codigo);
+    strcpy(this->nombre, _nombre);
+    strcpy(this->descripcion, _descripcion);
+    strcpy(this->temporadas, _temporadas);
+    strcpy(this->capitulos, _capitulos);
+    strcpy(this->publicObj, _publicObj);
 }
-
 void Series::Agregar()
 {
+    bool verified = false;
+    char _codigo[10], _nombre[100], _temporadas[15], _capitulos[15], _descripcion[200], _publicObj[15];
+    do
+    {
 
-    cout << "ESCRIBE EL CODIGO DE LA SERIE: ";
-    cin.getline(codigo, 10);
+        cout << "ESCRIBE EL CODIGO DE LA SERIE: ";
+        cin.getline(_codigo, 10);
+        verified = checkID(_codigo);
+    } while (verified);
     cout << "ESCRIBE EL NOMBRE DE LA SERIE: ";
-    cin.getline(nombre, 100);
+    cin.getline(_nombre, 100);
     cout << "ESCRIBE LA DESCRIPCION DE LA SERIE: ";
-    cin.getline(descripcion, 200);
+    cin.getline(_descripcion, 200);
     cout << "ESCRIBE EL NUMERO DE TEMPORADAS: ";
-    cin.getline(temporadas, 15);
+    cin.getline(_temporadas, 15);
     cout << "ESCRIBE EL NUMERO DE CAPITULOS: ";
-    cin.getline(capitulos, 15);
+    cin.getline(_capitulos, 15);
     cout << "ESCRIBE EL PUBLICO OBJETIVO: ";
-    cin.getline(publicObj, 15);
-    ofstream Archivo("Series.txt", ios::app);
-    dim1 = strlen(codigo);
-    dim2 = strlen(nombre);
-    dim3 = strlen(descripcion);
-    dim4 = strlen(temporadas);
-    dim5 = strlen(capitulos);
-    dim6 = strlen(publicObj);
-    Archivo.write((char *)&dim1, sizeof(int));
-    Archivo.write((char *)&codigo, dim1);
-    Archivo.write((char *)&dim2, sizeof(int));
-    Archivo.write((char *)&nombre, dim2);
-    Archivo.write((char *)&dim3, sizeof(int));
-    Archivo.write((char *)&descripcion, dim3);
-    Archivo.write((char *)&dim4, sizeof(int));
-    Archivo.write((char *)&temporadas, dim4);
-    Archivo.write((char *)&dim5, sizeof(int));
-    Archivo.write((char *)&capitulos, dim5);
-    Archivo.write((char *)&dim6, sizeof(int));
-    Archivo.write((char *)&publicObj, dim6);
+    cin.getline(_publicObj, 15);
+    setters(_codigo, _nombre, _temporadas, _capitulos, _descripcion, _publicObj);
+    ofstream Archivo("C:\\Visual Proyect\\Proyecto_Blim\\Series\\Series.txt", ios::app);
+    Archivo.write((char *)&serie, sizeof(serie));
 
     Archivo.close();
-    cont++;
 }
 void Series::Mostrar()
 {
     system("cls");
 
-    ifstream archivo("Series.txt");
+    ifstream archivo("C:\\Visual Proyect\\Proyecto_Blim\\Series\\Series.txt");
     if (!archivo.good())
     {
         cout << "\nEl archivo no existe...";
     }
     else
     {
-        int i = 0;
-        while (!archivo.eof() && i < cont)
+        while (!archivo.eof())
         {
-            archivo.read((char *)&dim1, sizeof(int)); // dim1 contiene el tama o de la cadena que se quiere leer
-            archivo.read((char *)&codigo, dim1);
-            codigo[dim1] = '\0'; // asignar fin de cadena al arreglo usuario para que no imprima basura
-            archivo.read((char *)&dim2, sizeof(int));
-            archivo.read((char *)&nombre, dim2);
-            nombre[dim2] = '\0';
-            archivo.read((char *)&dim3, sizeof(int));
-            archivo.read((char *)&descripcion, dim3);
-            descripcion[dim3] = '\0';
-            archivo.read((char *)&dim4, sizeof(int)); // dim1 contiene el tama o de la cadena que se quiere leer
-            archivo.read((char *)&temporadas, dim4);
-            temporadas[dim4] = '\0'; // asignar fin de cadena al arreglo usuario para que no imprima basura
-            archivo.read((char *)&dim5, sizeof(int));
-            archivo.read((char *)&capitulos, dim5);
-            capitulos[dim5] = '\0';
-            archivo.read((char *)&dim6, sizeof(int));
-            archivo.read((char *)&publicObj, dim6);
-            publicObj[dim6] = '\0';
-            cout << "Codigo: " <<  codigo << "\nNombre: " << nombre << "\nDescripcio: " << descripcion << "\nTemporadas:  " << temporadas << "\nCapitulos: " << capitulos << "\nPublico Objetivo: " << publicObj << endl<< endl;
-            i++;
+            archivo.read((char *)&serie, sizeof(serie)); // dim1 contiene el tama o de la cadena que se quiere leer
+            if (archivo.eof())
+                break;
+            cout << "Codigo: " << codigo << "\nNombre: " << nombre << "\nDescripcio: " << descripcion << "\nTemporadas:  " << temporadas << "\nCapitulos: " << capitulos << "\nPublico Objetivo: " << publicObj << endl
+                 << endl;
         }
     }
     archivo.close();
 }
-
 void Series::Modificar()
 {
     int band = 0;
     char codigo2[10];
 
-    ifstream archivo("Series.txt");
+    ifstream archivo("C:\\Visual Proyect\\Proyecto_Blim\\Series\\Series.txt");
+    ofstream temporal("C:\\Visual Proyect\\Proyecto_Blim\\Series\\temporal.txt", ios::app);
     if (!archivo.good())
     {
         cout << "\nEl archivo no existe...";
@@ -140,108 +124,73 @@ void Series::Modificar()
     {
         cout << "escribe el codigo del producto: ";
         cin.getline(codigo2, 10);
-        while (!archivo.eof() && !band)
+        while (!archivo.eof())
         {
-            archivo.read((char *)&dim1, sizeof(int)); // dim1 contiene el tama o de la cadena que se quiere leer
-            archivo.read((char *)&codigo, dim1);
-            codigo[dim1] = '\0'; // asignar fin de cadena al arreglo usuario para que no imprima basura
-            archivo.read((char *)&dim2, sizeof(int));
-            archivo.read((char *)&nombre, dim2);
-            nombre[dim2] = '\0';
-            archivo.read((char *)&dim3, sizeof(int));
-            archivo.read((char *)&descripcion, dim3);
-            descripcion[dim3] = '\0';
-            archivo.read((char *)&dim4, sizeof(int)); // dim1 contiene el tama o de la cadena que se quiere leer
-            archivo.read((char *)&temporadas, dim4);
-            temporadas[dim4] = '\0'; // asignar fin de cadena al arreglo usuario para que no imprima basura
-            archivo.read((char *)&dim5, sizeof(int));
-            archivo.read((char *)&capitulos, dim5);
-            capitulos[dim5] = '\0';
-            archivo.read((char *)&dim6, sizeof(int));
-            archivo.read((char *)&publicObj, dim6);
-            publicObj[dim6] = '\0';
-
+            archivo.read((char *)&serie, sizeof(serie)); // dim1 contiene el tama o de la cadena que se quiere leer
+            if (archivo.eof())
+                break;
             if (strcmp(codigo2, codigo) == 0)
             {
-                cout << "Codigo: " <<  codigo << "\nNombre: " << nombre << "\nDescripcio: " << descripcion << "\nTemporadas:  " << temporadas << "\nCapitulos: " << capitulos << "\nPublico Objetivo: " << publicObj << endl<< endl;
-                band = 1;
+                cout << "Codigo: " << codigo << "\nNombre: " << nombre << "\nDescripcio: " << descripcion << "\nTemporadas:  " << temporadas << "\nCapitulos: " << capitulos << "\nPublico Objetivo: " << publicObj << endl
+                     << endl;
                 cout << "DESEA MODIFICAR?\n1.SI\n0.NO\n>: ";
                 cin >> opc;
                 cin.ignore();
-            } // condicion
-
-        } // ciclo
-        archivo.close();
-
-        if (opc == 1)
-        {
-            int i = 0;
-            ifstream archivo("Series.txt");
-            ofstream temporal("temporal.txt", ios::app);
-            while (!archivo.eof() && i < cont)
-            {
-                archivo.read((char *)&dim1, sizeof(int)); // dim1 contiene el tama o de la cadena que se quiere leer
-                archivo.read((char *)&codigo, dim1);
-                codigo[dim1] = '\0'; // asignar fin de cadena al arreglo usuario para que no imprima basura
-                archivo.read((char *)&dim2, sizeof(int));
-                archivo.read((char *)&nombre, dim2);
-                nombre[dim2] = '\0';
-                archivo.read((char *)&dim3, sizeof(int));
-                archivo.read((char *)&descripcion, dim3);
-                descripcion[dim3] = '\0';
-                archivo.read((char *)&dim4, sizeof(int)); // dim1 contiene el tama o de la cadena que se quiere leer
-                archivo.read((char *)&temporadas, dim4);
-                temporadas[dim4] = '\0'; // asignar fin de cadena al arreglo usuario para que no imprima basura
-                archivo.read((char *)&dim5, sizeof(int));
-                archivo.read((char *)&capitulos, dim5);
-                capitulos[dim5] = '\0';
-                archivo.read((char *)&dim6, sizeof(int));
-                archivo.read((char *)&publicObj, dim6);
-                publicObj[dim6] = '\0';
-
-                if (strcmp(codigo2, codigo) == 0)
+                if (opc == 1)
                 {
-                    cout << "ESCRIBE EL CODIGO DE LA SERIE: ";
-                    cin.getline(codigo, 10);
-                    cout << "ESCRIBE EL NOMBRE DE LA SERIE: ";
-                    cin.getline(nombre, 100);
-                    cout << "ESCRIBE LA DESCRIPCION DE LA SERIE: ";
-                    cin.getline(descripcion, 200);
-                    cout << "ESCRIBE EL NUMERO DE TEMPORADAS: ";
-                    cin.getline(temporadas, 15);
-                    cout << "ESCRIBE EL NUMERO DE CAPITULOS: ";
-                    cin.getline(capitulos, 15);
-                    cout << "ESCRIBE EL PUBLICO OBJETIVO: ";
-                    cin.getline(publicObj, 15);
-                    dim1 = strlen(codigo);
-                    dim2 = strlen(nombre);
-                    dim3 = strlen(descripcion);
-                    dim4 = strlen(temporadas);
-                    dim5 = strlen(capitulos);
-                    dim6 = strlen(publicObj);
-                } // condicion
-                temporal.write((char *)&dim1, sizeof(int));
-                temporal.write((char *)&codigo, dim1);
-                temporal.write((char *)&dim2, sizeof(int));
-                temporal.write((char *)&nombre, dim2);
-                temporal.write((char *)&dim3, sizeof(int));
-                temporal.write((char *)&descripcion, dim3);
-                temporal.write((char *)&dim4, sizeof(int));
-                temporal.write((char *)&temporadas, dim4);
-                temporal.write((char *)&dim5, sizeof(int));
-                temporal.write((char *)&capitulos, dim5);
-                temporal.write((char *)&dim6, sizeof(int));
-                temporal.write((char *)&publicObj, dim6);
-                i++;
-            } // ciclo while
+                    int opcion = 0;
+                    cout << endl
+                         << "Codigo : " << codigo << endl
+                         << "Nombre : " << nombre << endl
+                         << "Descripcion : " << descripcion << endl
+                         << "#Temporadas #" << temporadas << endl
+                         << "#Capitulos #" << capitulos << endl
+                         << "Clasificacion : " << publicObj << endl
+                         << "   Que desea realizar ? " << endl
+                         << "(1) Modificar Nombre: " << endl
+                         << "(2) Modificar Descripcion: " << endl
+                         << "(3) Modificar # Temporadas: " << endl
+                         << "(4) Modificar # Capitulos" << endl
+                         << "(5) Modificar Clasificacion: " << endl
+                         << "(6) Regresar: " << endl
+                         << "Elige la opcion a realizar: ";
+                    cin >> opcion;
+                    cin.ignore();
+                    switch (opcion)
+                    {
 
-            temporal.close();
-            archivo.close();
-            remove("Series.txt");
-            rename("temporal.txt", "Series.txt");
-        } // condicional de la opcion
-
-    } // else
+                    case 1: //////Nombre
+                        cout << "ESCRIBE EL NOMBRE DE LA SERIE: ";
+                        cin.getline(nombre, 100);
+                        break;
+                    case 2: /// Descripcion
+                        cout << "ESCRIBE LA DESCRIPCION DE LA SERIE: ";
+                        cin.getline(descripcion, 200);
+                        break;
+                    case 3: /// Temporadas
+                        cout << "ESCRIBE EL NUMERO DE TEMPORADAS: ";
+                        cin.getline(temporadas, 15);
+                        break;
+                    case 4: /// Capitulos
+                        cout << "ESCRIBE EL NUMERO DE CAPITULOS: ";
+                        cin.getline(capitulos, 15);
+                        break;
+                    case 5: /// Clasificacion
+                        cout << "ESCRIBE EL PUBLICO OBJETIVO: ";
+                        cin.getline(publicObj, 15);
+                        break;
+                    default:
+                        cout << "\n No se encontro la opcion ";
+                    }
+                }
+            }
+            temporal.write((char *)&serie, sizeof(serie));
+        }
+    }
+    temporal.close();
+    archivo.close();
+    remove("C:\\Visual Proyect\\Proyecto_Blim\\Series\\Series.txt");
+    rename("C:\\Visual Proyect\\Proyecto_Blim\\Series\\temporal.txt", "C:\\Visual Proyect\\Proyecto_Blim\\Series\\Series.txt");
 }
 
 void Series::Eliminar()
@@ -249,7 +198,7 @@ void Series::Eliminar()
     int band = 0;
     char codigo2[10];
 
-    ifstream archivo("Series.txt");
+    ifstream archivo("C:\\Visual Proyect\\Proyecto_Blim\\Series\\Series.txt");
     if (!archivo.good())
     {
         cout << "\nEl archivo no existe...";
@@ -260,27 +209,13 @@ void Series::Eliminar()
         cin.getline(codigo2, 10);
         while (!archivo.eof() && !band)
         {
-            archivo.read((char *)&dim1, sizeof(int)); // dim1 contiene el tama o de la cadena que se quiere leer
-            archivo.read((char *)&codigo, dim1);
-            codigo[dim1] = '\0'; // asignar fin de cadena al arreglo usuario para que no imprima basura
-            archivo.read((char *)&dim2, sizeof(int));
-            archivo.read((char *)&nombre, dim2);
-            nombre[dim2] = '\0';
-            archivo.read((char *)&dim3, sizeof(int));
-            archivo.read((char *)&descripcion, dim3);
-            descripcion[dim3] = '\0';
-            archivo.read((char *)&dim4, sizeof(int)); // dim1 contiene el tama o de la cadena que se quiere leer
-            archivo.read((char *)&temporadas, dim4);
-            temporadas[dim4] = '\0'; // asignar fin de cadena al arreglo usuario para que no imprima basura
-            archivo.read((char *)&dim5, sizeof(int));
-            archivo.read((char *)&capitulos, dim5);
-            capitulos[dim5] = '\0';
-            archivo.read((char *)&dim6, sizeof(int));
-            archivo.read((char *)&publicObj, dim6);
-            publicObj[dim6] = '\0';
+            archivo.read((char *)&serie, sizeof(serie)); // dim1 contiene el tama o de la cadena que se quiere leer
+            if (archivo.eof())
+                break;
             if (strcmp(codigo2, codigo) == 0)
             {
-                cout << "Codigo: " <<  codigo << "\nNombre: " << nombre << "\nDescripcio: " << descripcion << "\nTemporadas:  " << temporadas << "\nCapitulos: " << capitulos << "\nPublico Objetivo: " << publicObj << endl<< endl;
+                cout << "Codigo: " << codigo << "\nNombre: " << nombre << "\nDescripcio: " << descripcion << "\nTemporadas:  " << temporadas << "\nCapitulos: " << capitulos << "\nPublico Objetivo: " << publicObj << endl
+                     << endl;
                 band = 1;
                 cout << "DESEAS ELIMINAR?\n1.- SI\n0.- NO\n>: ";
                 cin >> opc;
@@ -293,55 +228,25 @@ void Series::Eliminar()
         if (opc == 1)
         {
             int i = 0;
-            ifstream archivo("Series.txt");
-            ofstream temporal("temporal.txt", ios::app);
-            while (!archivo.eof() && i < cont)
+            ifstream archivo("C:\\Visual Proyect\\Proyecto_Blim\\Series\\Series.txt");
+            ofstream temporal("C:\\Visual Proyect\\Proyecto_Blim\\Series\\temporal.txt", ios::app);
+            while (!archivo.eof())
             {
-                archivo.read((char *)&dim1, sizeof(int)); // dim1 contiene el tama o de la cadena que se quiere leer
-                archivo.read((char *)&codigo, dim1);
-                codigo[dim1] = '\0'; // asignar fin de cadena al arreglo usuario para que no imprima basura
-                archivo.read((char *)&dim2, sizeof(int));
-                archivo.read((char *)&nombre, dim2);
-                nombre[dim2] = '\0';
-                archivo.read((char *)&dim3, sizeof(int));
-                archivo.read((char *)&descripcion, dim3);
-                descripcion[dim3] = '\0';
-                archivo.read((char *)&dim4, sizeof(int)); // dim1 contiene el tama o de la cadena que se quiere leer
-                archivo.read((char *)&temporadas, dim4);
-                temporadas[dim4] = '\0'; // asignar fin de cadena al arreglo usuario para que no imprima basura
-                archivo.read((char *)&dim5, sizeof(int));
-                archivo.read((char *)&capitulos, dim5);
-                capitulos[dim5] = '\0';
-                archivo.read((char *)&dim6, sizeof(int));
-                archivo.read((char *)&publicObj, dim6);
-                publicObj[dim6] = '\0';
-
+                archivo.read((char *)&serie, sizeof(serie));
+                if (archivo.eof())
+                    break;
                 if (strcmp(codigo2, codigo) != 0)
                 {
-                    temporal.write((char *)&dim1, sizeof(int));
-                    temporal.write((char *)&codigo, dim1);
-                    temporal.write((char *)&dim2, sizeof(int));
-                    temporal.write((char *)&nombre, dim2);
-                    temporal.write((char *)&dim3, sizeof(int));
-                    temporal.write((char *)&descripcion, dim3);
-                    temporal.write((char *)&dim4, sizeof(int));
-                    temporal.write((char *)&temporadas, dim4);
-                    temporal.write((char *)&dim5, sizeof(int));
-                    temporal.write((char *)&capitulos, dim5);
-                    temporal.write((char *)&dim6, sizeof(int));
-                    temporal.write((char *)&publicObj, dim6);
+                    temporal.write((char *)&serie, sizeof(serie));
                 } // condicion
                 i++;
             } // ciclo while
-
             temporal.close();
             archivo.close();
-            remove("Series.txt");
-            rename("temporal.txt", "Series.txt");
-            cont--;
+            remove("C:\\Visual Proyect\\Proyecto_Blim\\Series\\Series.txt");
+            rename("C:\\Visual Proyect\\Proyecto_Blim\\Series\\temporal.txt", "C:\\Visual Proyect\\Proyecto_Blim\\Series\\Series.txt");
         } // condicional de la opcion
-
-    } //
+    }     //
 }
 
 void Series::Buscar()
@@ -350,7 +255,7 @@ void Series::Buscar()
     int band = 0;
     system("cls");
 
-    ifstream archivo("Series.txt");
+    ifstream archivo("C:\\Visual Proyect\\Proyecto_Blim\\Series\\Series.txt");
     if (!archivo.good())
     {
         cout << "\nEl archivo no existe...";
@@ -361,27 +266,13 @@ void Series::Buscar()
         cin.getline(codigo2, 10);
         while (!archivo.eof() && !band)
         {
-            archivo.read((char *)&dim1, sizeof(int)); // dim1 contiene el tama o de la cadena que se quiere leer
-            archivo.read((char *)&codigo, dim1);
-            codigo[dim1] = '\0'; // asignar fin de cadena al arreglo usuario para que no imprima basura
-            archivo.read((char *)&dim2, sizeof(int));
-            archivo.read((char *)&nombre, dim2);
-            nombre[dim2] = '\0';
-            archivo.read((char *)&dim3, sizeof(int));
-            archivo.read((char *)&descripcion, dim3);
-            descripcion[dim3] = '\0';
-            archivo.read((char *)&dim4, sizeof(int)); // dim1 contiene el tama o de la cadena que se quiere leer
-            archivo.read((char *)&temporadas, dim4);
-            temporadas[dim4] = '\0'; // asignar fin de cadena al arreglo usuario para que no imprima basura
-            archivo.read((char *)&dim5, sizeof(int));
-            archivo.read((char *)&capitulos, dim5);
-            capitulos[dim5] = '\0';
-            archivo.read((char *)&dim6, sizeof(int));
-            archivo.read((char *)&publicObj, dim6);
-            publicObj[dim6] = '\0';
+            archivo.read((char *)&serie, sizeof(serie)); // dim1 contiene el tama o de la cadena que se quiere leer
+            if (archivo.eof())
+                break;
             if (strcmpi(codigo2, codigo) == 0)
             {
-                cout << "Codigo: " <<  codigo << "\nNombre: " << nombre << "\nDescripcio: " << descripcion << "\nTemporadas:  " << temporadas << "\nCapitulos: " << capitulos << "\nPublico Objetivo: " << publicObj << endl<< endl;
+                cout << "Codigo: " << codigo << "\nNombre: " << nombre << "\nDescripcion: " << descripcion << "\nTemporadas:  " << temporadas << "\nCapitulos: " << capitulos << "\nPublico Objetivo: " << publicObj << endl
+                     << endl;
                 band = 1;
             }
         }
@@ -390,10 +281,9 @@ void Series::Buscar()
     }
     archivo.close();
 }
-int main()
+void adminSeries()
 {
-    pr.Recovery();
-    cout << "\n\n\t\tBIENVENIDO AL MENU PRODUCTOS\n\n";
+    cout << "\n\n\t\tMENU SERIES ADMIN\n\n";
     do
     {
         cout << "\n\tSELECCIONE LA OPCION DESEADA\n1.- AGREGAR\n2.- MOSTRAR\n3.- BUSCAR\n4.- MODIFICAR\n5.- ELIMINAR\n6.- SALIR\n>: ";
@@ -402,27 +292,19 @@ int main()
         switch (opc)
         {
         case 1:
-            pr.Agregar();
+            serie.Agregar();
             break;
         case 2:
-            pr.Mostrar();
+            serie.Mostrar();
             break;
         case 3:
-            pr.Buscar();
+            serie.Buscar();
             break;
         case 4:
-            pr.Modificar();
-            // empleado.Datos();
+            serie.Modificar();
             break;
         case 5:
-            if (!cont)
-            {
-                cout << "No hay datos" << endl;
-            }
-            else
-            {
-                pr.Eliminar();
-            }
+            serie.Eliminar();
             break;
         case 6:
             cout << "Datos guardados y cerrando......" << endl;
@@ -430,7 +312,8 @@ int main()
         default:
             cout << "OPCION INCORRECTA...." << endl;
         }
-        pr.ChangeCont();
         system("Pause");
+        system("cls");
     } while (opc != 6);
+    return;
 }

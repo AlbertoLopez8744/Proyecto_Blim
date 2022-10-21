@@ -455,7 +455,9 @@ void menuAdmin()
         cout << "3.-Modificar " << endl;
         cout << "4.-Eliminar" << endl;
         cout << "5.-Buscar " << endl;
-        cout << "6.-Cerrar Sesion " << endl;
+        cout << "6.-Peliculas"<<endl;
+        cout << "7.-Series"<<endl;
+        cout << "8.-Cerrar Sesion " << endl;
         cout << "Ingresa la opcion->";
         cin >> op;
         cin.ignore();
@@ -487,10 +489,17 @@ void menuAdmin()
             system("pause");
             break;
         case 6:
-            op = 6;
+            system("cls");
+            adminMovies();
+            system("pause");
+            break;
+        case 7:
+            system("cls");
+            adminSeries();
+            system("pause");
             break;
         }
-    } while (op != 6);
+    } while (op != 8);
     return;
 }
 
@@ -518,7 +527,7 @@ void menuUser(){
             break;
         case 2:
             system("cls");
-            OrdCom.Mostrar();
+            serie.Mostrar();
             system("pause");
             break;
         case 3:

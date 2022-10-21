@@ -8,59 +8,71 @@ public:
     char codigo[35], nombre[100], descripcion[200], time[15], publicObj[15];
     char delim = '\n';
     void Capturar();
-    bool VerificarData(char codigo[35]);
+    bool checkID(char *);
     void Imprimir();
     void Buscar();
     void Eliminar();
     void Modificar();
+    void setters(char *, char *, char *, char *, char *);
 } movies;
+void Movie::setters(char *_codigo, char *_nombre, char *_descripcion, char *_time, char *_publicObj)
+{
+    strcpy(this->codigo, _codigo);
+    strcpy(this->nombre, _nombre);
+    strcpy(this->descripcion, _descripcion);
+    strcpy(this->time, _time);
+    strcpy(this->publicObj, _publicObj);
+}
 void Movie::Capturar()
 {
+    bool verified = false;
+    char _codigo[35], _nombre[100], _descripcion[200], _time[15], _publicObj[15];
     do
     {
         cout << "\nCodigo: ";
-        fflush(stdin);
-        cin.getline(codigo, 35);
-    } while (VerificarData(codigo));
+
+        cin.getline(_codigo, 35);
+        verified = checkID(_codigo);
+    } while (verified);
     cout << "\nNombre: ";
-    fflush(stdin);
-    cin.getline(nombre, 100);
+    cin.getline(_nombre, 100);
     cout << "\nDescripcion: ";
-    fflush(stdin);
-    cin.getline(descripcion, 200);
+    cin.getline(_descripcion, 200);
     cout << "\nTime: ";
-    fflush(stdin);
-    cin.getline(time, 15);
+    cin.getline(_time, 15);
     cout << "\nClasificacion: ";
-    fflush(stdin);
-    cin.getline(publicObj, 15);
+    cin.getline(_publicObj, 15);
+    setters(_codigo, _nombre, _descripcion, _time, _publicObj);
     ofstream archivo("C:\\Visual Proyect\\Proyecto_Blim\\Peliculas\\Peliculas.txt", ios::app);
     archivo.write((char *)&movies, sizeof(movies));
     archivo.close();
 }
-bool Movie::VerificarData(char codigo[35])
+bool Movie::checkID(char *_codigo)
 {
-    char prev[35];
+    bool band = false;
+    string buffer1;
+    string buffer2;
+    buffer1 = _codigo;
     ifstream arc("C:\\Visual Proyect\\Proyecto_Blim\\Peliculas\\Peliculas.txt");
-    if (!arc.good())
-        cout << "\nEl archivo no existe";
-    else
+    if (!arc.good()){
+        //cout << "\nEl archivo no existe";
+    }else
     {
         while (!arc.eof())
         {
             arc.read((char *)&movies, sizeof(movies));
+            buffer2 = codigo;
             if (arc.eof())
                 break;
-            if (strcmp(prev, codigo) == 0)
+            if (buffer1 == buffer2)
             {
-                arc.close();
                 cout << "Se encontraron coincidencias por favor intente con otro codigo";
-                return true;
+                band = true;
             }
         }
     }
     arc.close();
-    return false;
+    return band;
 }
 void Movie::Imprimir()
 {
@@ -95,7 +107,6 @@ void Movie::Buscar()
     char ref[35], prev[35];
     int band = 1;
     cout << "\nEscribe el codigo de la Pelicula a buscar \n";
-    fflush(stdin);
     cin.getline(ref, 35);
     ifstream arc("C:\\Visual Proyect\\Proyecto_Blim\\Peliculas\\Peliculas.txt");
     if (!arc.good())
@@ -107,7 +118,7 @@ void Movie::Buscar()
             arc.read((char *)&movies, sizeof(movies));
             if (arc.eof())
                 break;
-            if (strcmp(prev, ref) == 0)
+            if (strcmp(codigo, ref) == 0)
             {
                 cout << "\nCodigo: " << codigo;
                 cout << "\nNombre: " << nombre;
@@ -141,6 +152,8 @@ void Movie::Eliminar()
         while (!arc.eof())
         {
             arc.read((char *)&movies, sizeof(movies));
+            if (arc.eof())
+                break;
             if (strcmp(codigo, prodMod) == 0 && !b)
             {
                 cout << "Se encontro una coincidencia" << endl;
@@ -149,8 +162,9 @@ void Movie::Eliminar()
                 cout << "\nDescripcion: " << descripcion;
                 cout << "\nDuracion: " << time;
                 cout << "\nClasificaion: " << publicObj << endl;
-                cout << "¿Quiere eliminarlo?" << endl;
-                cout << "1=si   2=no" << endl;
+                cout << "Quiere eliminarlo?" << endl;
+                cout << "(1) SI   (2) NO" << endl
+                     << "-> ";
                 cin >> resp;
                 cin.ignore();
                 if (resp == 2)
@@ -193,7 +207,7 @@ void Movie::Modificar()
         b = false;
         while (!arc.eof())
         {
-            arc.read((char*)&movies, sizeof(movies));
+            arc.read((char *)&movies, sizeof(movies));
             if (arc.eof())
                 break;
             if (strcmp(codigo, prodMod) == 0 && !b)
@@ -205,47 +219,43 @@ void Movie::Modificar()
                      << "Duracion : " << time << endl
                      << "Clasificacion : " << publicObj << endl
                      << "   Que desea realizar ? " << endl
-                     << "(1) Modificar Codigo: " << endl
-                     << "(2) Modificar Nombre: " << endl
-                     << "(3) Modificar Descripcion: " << endl
-                     << "(4) Modificar Duracion: " << endl
-                     << "(5) Modificar Clasificacion: " << endl
-                     << "(6) Regresar: " << endl
+                     << "(1) Modificar Nombre: " << endl
+                     << "(2) Modificar Descripcion: " << endl
+                     << "(3) Modificar Duracion: " << endl
+                     << "(4) Modificar Clasificacion: " << endl
+                     << "(5) Regresar: " << endl
                      << "Elige la opcion a realizar: ";
                 cin >> opcion;
                 cin.ignore();
                 switch (opcion)
                 {
-                case 1: ///////codigo
-                    cout << "\n Codigo : ";
-                    cin.getline(codigo, 35);
-                    break;
-                case 2: //////nombre
+
+                case 1: //////Nombre
                     cout << "\n Nombre : ";
                     cin.getline(nombre, 100);
                     break;
-                case 3: /// Descripcion
+                case 2: /// Descripcion
                     cout << "\n Descripcion : ";
                     cin.getline(descripcion, 200);
                     break;
-                case 4: /// Duracion
+                case 3: /// Duracion
                     cout << "\n Duracion : ";
                     cin.getline(time, 15);
                     break;
-                case 5: /// Clasificacion
+                case 4: /// Clasificacion
                     cout << "\n Clasificacion : ";
                     cin.getline(publicObj, 15);
                     break;
-                case 6:
+                case 5:
                     b = true;
                     break;
                 default:
                     cout << "\n No se encontro la opcion ";
                 }
-                if (opcion != 6 && opcion > 0 && opcion < 7)
+                if (opcion != 5)
                     b = true;
             }
-            arcTemp.write((char*)&movies, sizeof(movies));
+            arcTemp.write((char *)&movies, sizeof(movies));
         }
         arc.close();
         arcTemp.close();
@@ -255,7 +265,7 @@ void Movie::Modificar()
         rename("C:\\Visual Proyect\\Proyecto_Blim\\Peliculas\\temporalauto.txt", "C:\\Visual Proyect\\Proyecto_Blim\\Peliculas\\Peliculas.txt");
     }
 }
-void menuAdminMovies()
+void adminMovies()
 {
     int op;
     do
