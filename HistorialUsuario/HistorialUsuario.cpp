@@ -9,15 +9,15 @@ using namespace std;
 int orden = 0;
 bool aux = false; // Nos servira para saber si nuestro contador esta en 0 o no
 
-class ListaRepro
+class Historial
 {
 private:
     int indxContent = 0;
-    char idList[15], nameList[35], content[10][10];
+    char idUser[15], nameList[35], content[10][10];
     char delimitador = '\n';
 
 public:
-    void setList(char _idList[15], char _nameList[35]);
+    void setList(char _idUser[15], char _nameList[35]);
     void setContent(int space);
     void capturar();
     void mostrar();
@@ -29,7 +29,7 @@ public:
 } x;
 
 int cont = 0;
-void ListaRepro::Recovery()
+void Historial::Recovery()
 {
     int temp;
     ifstream Archivo("Cont.bin", ios::binary);
@@ -47,7 +47,7 @@ void ListaRepro::Recovery()
     Archivo.close();
 }
 
-void ListaRepro::ChangeCont()
+void Historial::ChangeCont()
 {
     ofstream temporal("temporal.bin", ios::binary);
     temporal << cont;
@@ -56,13 +56,13 @@ void ListaRepro::ChangeCont()
     rename("temporal.bin", "Cont.bin");
 }
 
-void ListaRepro::setList(char _idList[15], char _nameList[35])
+void Historial::setList(char _idUser[15], char _nameList[35])
 {
-    strcpy(idList, _idList);
+    strcpy(idUser, _idUser);
     strcpy(nameList, _nameList);
 }
 
-void ListaRepro::setContent(int space)
+void Historial::setContent(int space)
 {
     char temp[10][10];
     for (int i = 0; i < space; i++)
@@ -77,7 +77,7 @@ void ListaRepro::setContent(int space)
     }
 }
 
-void ListaRepro::capturar()
+void Historial::capturar()
 {
     ifstream b("datos.bin");
     ofstream a("tempdatos.bin", ios::binary);
@@ -88,15 +88,15 @@ void ListaRepro::capturar()
     }
     indxContent = 0;
     int _space;
-    char _idList[15], _nameList[35];
+    char _idUser[15], _nameList[35];
 
     cout << "    AGREGAR LISTA DE REPRODUCCION" << endl;
     cout << "------------------------------------" << endl;
     cout << "Id de la Lista:" << endl;
-    cin.getline(_idList, 14);
-    cout << "Dame el Nombre de la ListaRepro" << endl;
+    cin.getline(_idUser, 14);
+    cout << "Dame el Nombre de la Historial" << endl;
     cin.getline(_nameList, 35);
-    setList(_idList, _nameList);
+    setList(_idUser, _nameList);
     cout << "Cuantas id's agregara:" << endl;
     cin >> _space;
     cin.ignore();
@@ -114,7 +114,7 @@ void ListaRepro::capturar()
     cout << "*********************************" << endl;
 }
 
-void ListaRepro::mostrar()
+void Historial::mostrar()
 {
     ifstream a("datos.bin");
     if (!a.good())
@@ -128,7 +128,7 @@ void ListaRepro::mostrar()
             a.read((char *)&x, sizeof(x));
             if (a.eof())
                 break;
-            cout << "ID:" << x.idList << endl
+            cout << "ID:" << x.idUser << endl
                  << "Nombre: " << x.nameList << endl;
             for (int i = 0; i < indxContent; i++)
             {
@@ -140,9 +140,9 @@ void ListaRepro::mostrar()
     a.close();
 }
 
-void ListaRepro::buscar()
+void Historial::buscar()
 {
-    char idListbus[14];
+    char idUserbus[14];
     int band = 0;
     ifstream a("datos.bin");
     if (!a.good())
@@ -154,7 +154,7 @@ void ListaRepro::buscar()
         cout << "\tBUSCAR" << endl
              << "----------------------------------" << endl;
         cout << "\nID de Lista de Reproduccion a buscar!" << endl;
-        cin.getline(idListbus, 14);
+        cin.getline(idUserbus, 14);
         while (!a.eof())
         {
             a.read((char *)&x, sizeof(x));
@@ -162,11 +162,11 @@ void ListaRepro::buscar()
             {
                 break;
             }
-            if (strcmp(x.idList, idListbus) == 0)
+            if (strcmp(x.idUser, idUserbus) == 0)
             {
                 cout << "  Lista de Reproduccion encontrada" << endl
                      << "------------------------------------" << endl;
-                cout << "ID:" << x.idList << endl
+                cout << "ID:" << x.idUser << endl
                      << "Nombre: " << x.nameList << endl;
                 for (int i = 0; i < indxContent; i++)
                 {
@@ -185,9 +185,9 @@ void ListaRepro::buscar()
     a.close();
 }
 
-void ListaRepro::Modificar()
+void Historial::Modificar()
 {
-    char idListmod[15];
+    char idUsermod[15];
     int band = 0;
     int opc;
     ifstream datos("datos.bin");
@@ -201,7 +201,7 @@ void ListaRepro::Modificar()
         cout << "             MODIFICAR" << endl
              << "----------------------------------" << endl;
         cout << "\nID de Lista de Reproduccion a modificar!" << endl;
-        cin.getline(idListmod, 14);
+        cin.getline(idUsermod, 14);
         while (!datos.eof())
         {
             datos.read((char *)&x, sizeof(x));
@@ -209,11 +209,11 @@ void ListaRepro::Modificar()
             {
                 break;
             }
-            if (strcmp(x.idList, idListmod) == 0 && band == 0)
+            if (strcmp(x.idUser, idUsermod) == 0 && band == 0)
             {
                 cout << " Lista de Reproduccion a Modificar" << endl
                      << "------------------------------------" << endl;
-                cout << "ID:" << x.idList << endl
+                cout << "ID:" << x.idUser << endl
                      << "Nombre: " << x.nameList << endl;
                 for (int i = 0; i < indxContent; i++)
                 {
@@ -241,7 +241,7 @@ void ListaRepro::Modificar()
                         char _nameList[35];
                         cout << "Dame el nuevo Nombre de la Lista de Reroduccion" << endl;
                         cin.getline(_nameList, 35);
-                        x.setList(x.idList, _nameList);
+                        x.setList(x.idUser, _nameList);
                     }
                     else if (mod == 2)
                     {
@@ -346,9 +346,9 @@ void ListaRepro::Modificar()
     rename("temp.bin", "datos.bin");
 }
 
-void ListaRepro::Eliminar()
+void Historial::Eliminar()
 {
-    char idListeli[15];
+    char idUsereli[15];
     bool band = false;
     long int tempPos;
     ifstream a("datos.bin");
@@ -363,7 +363,7 @@ void ListaRepro::Eliminar()
         cout << "             ELIMINAR             " << endl
              << "----------------------------------" << endl;
         cout << " ID de Lista de Reproduccion a eliminar!" << endl;
-        cin.getline(idListeli, 14);
+        cin.getline(idUsereli, 14);
         while (!a.eof())
         {
             int opc = 0;
@@ -372,13 +372,13 @@ void ListaRepro::Eliminar()
             {
                 break;
             }
-            if (strcmp(x.idList, idListeli) == 0)
+            if (strcmp(x.idUser, idUsereli) == 0)
             {
                 if (a.eof())
                     break;
                 cout << "  Lista de Reproduccion a Eliminar  " << endl
                      << "------------------------------------" << endl;
-                cout << "ID:" << x.idList << endl
+                cout << "ID:" << x.idUser << endl
                      << "Nombre: " << x.nameList << endl;
                 for (int i = 0; i < indxContent; i++)
                 {

@@ -5,7 +5,7 @@ using namespace std;
 class Movie
 {
 public:
-    char codigo[35], nombre[100], descripcion[200], time[15], publicObj[15];
+    char codigo[10], nombre[100], descripcion[200], time[15], publicObj[15];
     char delim = '\n';
     void Capturar();
     bool checkID(char *);
@@ -26,12 +26,12 @@ void Movie::setters(char *_codigo, char *_nombre, char *_descripcion, char *_tim
 void Movie::Capturar()
 {
     bool verified = false;
-    char _codigo[35], _nombre[100], _descripcion[200], _time[15], _publicObj[15];
+    char _codigo[10], _nombre[100], _descripcion[200], _time[15], _publicObj[15];
     do
     {
         cout << "\nCodigo: ";
 
-        cin.getline(_codigo, 35);
+        cin.getline(_codigo, 10);
         verified = checkID(_codigo);
     } while (verified);
     cout << "\nNombre: ";
@@ -81,7 +81,6 @@ void Movie::Imprimir()
     if (!Lectura.good())
     {
         cout << "No existe el archivo\n";
-        system("pause");
     }
     else
     {
@@ -98,16 +97,15 @@ void Movie::Imprimir()
                  << "Duracion: " << time << endl
                  << "Clasificacion: " << publicObj << endl;
         }
-        system("pause");
     }
     Lectura.close();
 }
 void Movie::Buscar()
 {
-    char ref[35], prev[35];
+    char ref[10], prev[10];
     int band = 1;
     cout << "\nEscribe el codigo de la Pelicula a buscar \n";
-    cin.getline(ref, 35);
+    cin.getline(ref, 10);
     ifstream arc("C:\\Visual Proyect\\Proyecto_Blim\\Peliculas\\Peliculas.txt");
     if (!arc.good())
         cout << "\nEl archivo no existe";
@@ -147,7 +145,7 @@ void Movie::Eliminar()
     else
     {
         cout << "\n Introduce el codigo a Eliminar  :  " << endl;
-        cin.getline(prodMod, 35);
+        cin.getline(prodMod, 10);
         b = false;
         while (!arc.eof())
         {
@@ -203,7 +201,7 @@ void Movie::Modificar()
     else
     {
         cout << "\n Introduce el codigo a modificar :  ";
-        cin.getline(prodMod, 35);
+        cin.getline(prodMod, 10);
         b = false;
         while (!arc.eof())
         {
@@ -229,7 +227,6 @@ void Movie::Modificar()
                 cin.ignore();
                 switch (opcion)
                 {
-
                 case 1: //////Nombre
                     cout << "\n Nombre : ";
                     cin.getline(nombre, 100);
@@ -307,35 +304,33 @@ void userMovies()
     int op;
     do
     {
-        cout << "\nIngresa el numero de la opcion: \n2.Imprimir todo \n3.Buscar \n4.Eliminar \n5.Modificar \n6.Salir\n";
+        cout << endl << "MENU PELICULAS"<<endl
+        << "[1] CATALOGO" << endl
+        << "[2] BUSCAR" << endl
+        << "[3] VER" << endl
+        << "[4] SALIR" << endl
+        << "-> ";
         cin >> op;
         cin.ignore();
         switch (op)
         {
         case 1:  
-            movies.Capturar();
+            movies.Imprimir();
             system("pause");
             system("cls");
             break;
         case 2:
-            movies.Imprimir();
-            system("cls");
-            break;
-        case 3:
             movies.Buscar();
             system("pause");
             system("cls");
             break;
-        case 4:
-            movies.Eliminar();
+        case 3:
+            cout << "Estamos trabajando en ello <3"<<endl;
             system("pause");
             system("cls");
             break;
-        case 5:
-            movies.Modificar();
-            system("pause");
-            system("cls");
+        
         }
-    } while (op != 6);
+    } while (op != 4);
     return;
 }

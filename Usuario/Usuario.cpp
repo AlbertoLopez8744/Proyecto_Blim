@@ -531,7 +531,7 @@ void menuUser(){
     do
     {
         system("cls");
-        cout << "BIENVENIDO " <<OrdCom.getUser()<< endl;
+        cout << "BIENVENIDO " <<userLog.userName<< endl;
         cout << "1.-Ver Peliculas" << endl;
         cout << "2.-Ver Series" << endl;
         cout << "3.-Listas de Reproduccion " << endl;
