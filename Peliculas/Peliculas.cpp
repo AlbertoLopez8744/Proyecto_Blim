@@ -275,7 +275,44 @@ void adminMovies()
         cin.ignore();
         switch (op)
         {
-        case 1:
+        case 1:  
+            movies.Capturar();
+            system("pause");
+            system("cls");
+            break;
+        case 2:
+            movies.Imprimir();
+            system("cls");
+            break;
+        case 3:
+            movies.Buscar();
+            system("pause");
+            system("cls");
+            break;
+        case 4:
+            movies.Eliminar();
+            system("pause");
+            system("cls");
+            break;
+        case 5:
+            movies.Modificar();
+            system("pause");
+            system("cls");
+        }
+    } while (op != 6);
+    return;
+}
+void userMovies()
+{
+    int op;
+    do
+    {
+        cout << "\nIngresa el numero de la opcion: \n2.Imprimir todo \n3.Buscar \n4.Eliminar \n5.Modificar \n6.Salir\n";
+        cin >> op;
+        cin.ignore();
+        switch (op)
+        {
+        case 1:  
             movies.Capturar();
             system("pause");
             system("cls");

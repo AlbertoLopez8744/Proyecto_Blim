@@ -317,3 +317,40 @@ void adminSeries()
     } while (opc != 6);
     return;
 }
+
+void userSeries()
+{
+    cout << "\n\n\t\tMENU SERIES ADMIN\n\n";
+    do
+    {
+        cout << "\n\tSELECCIONE LA OPCION DESEADA\n1.- AGREGAR\n2.- MOSTRAR\n3.- BUSCAR\n4.- MODIFICAR\n5.- ELIMINAR\n6.- SALIR\n>: ";
+        cin >> opc;
+        cin.ignore();
+        switch (opc)
+        {
+        case 1:
+            serie.Agregar();
+            break;
+        case 2:
+            serie.Mostrar();
+            break;
+        case 3:
+            serie.Buscar();
+            break;
+        case 4:
+            serie.Modificar();
+            break;
+        case 5:
+            serie.Eliminar();
+            break;
+        case 6:
+            cout << "Datos guardados y cerrando......" << endl;
+            break;
+        default:
+            cout << "OPCION INCORRECTA...." << endl;
+        }
+        system("Pause");
+        system("cls");
+    } while (opc != 6);
+    return;
+}

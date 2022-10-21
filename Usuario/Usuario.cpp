@@ -10,6 +10,21 @@ using namespace std;
 bool typeLog;
 void menuUser();
 void menuAdmin();
+class Logged {
+public:
+    char id[15];
+    char userName[30];
+    char password[35];
+    char delim = '\n';
+    void submit(char*,char*,char*);
+}userLog;
+
+void Logged::submit(char *_id, char *_user, char *_password){
+    strcpy(this->id, _id);
+    strcpy(this->userName, _user);
+    strcpy(this->password, _password);
+}
+
 class Users
 {
  
@@ -34,6 +49,7 @@ public:
     void Eliminar();
     bool checkLog();
 } OrdCom;
+
 void Users::setters(char *_id, char *_user, char *_password)
 {
     strcpy(this->id, _id);
@@ -187,8 +203,12 @@ void Users::Modificar()
     else
     {
         cout << "MODIFICAR USUARIO" << endl;
-        cout << "Ingrese el ID a modificar: ";
-        cin.getline(valor, 15);
+        if(typeLog){
+            cout << "Ingrese el ID a modificar: ";
+            cin.getline(valor, 15);
+        }else{
+            strcpy(valor,userLog.id);
+        }
         ofstream archivo2("C:\\Visual Proyect\\Proyecto_Blim\\Usuario\\temporal.txt", ios::app);
         while (!archivo.eof())
         {
@@ -199,6 +219,7 @@ void Users::Modificar()
             }
             if (strcmp(id, valor) == 0)
             {
+                strcpy(OrdCom.id, valor);
                 char buffer[35];
                 cout << "Usuario: " << userName << endl;
                 cout << "Ingrese su password: ";
@@ -398,10 +419,12 @@ bool Users::checkLog(){
                     cout<<"INVALID PASSWORD"<<endl;
                     return false;
                 }
+
                 //cout<<this->admin<<"  "<<OrdCom.admin<<endl;
                 if(this->admin){
                     typeLog = true;
                 }else if(!this->admin){
+                    userLog.submit(this->id,this->userName,this->password);
                     typeLog = false;
                 }
                 system("pause");
@@ -441,7 +464,7 @@ void LogIn(){
     } while (opc!=2);
 }
 void SignUp(){
-    OrdCom.Agregar();\
+    OrdCom.Agregar();
 }
 void menuAdmin()
 {
@@ -514,7 +537,8 @@ void menuUser(){
         cout << "3.-Listas de Reproduccion " << endl;
         cout << "4.-Historial" << endl;
         cout << "5.-Buscar " << endl;
-        cout << "6.-Cerrar Sesion " << endl;
+        cout << "6.-Configuracion cuenta"<<endl;
+        cout << "7.-Cerrar Sesion " << endl;
         cout << "Ingresa la opcion->";
         cin >> op;
         cin.ignore();
@@ -522,7 +546,7 @@ void menuUser(){
         {
         case 1:
             system("cls");
-            movies.Imprimir();
+            userMovies();
             system("pause");
             break;
         case 2:
@@ -532,23 +556,25 @@ void menuUser(){
             break;
         case 3:
             system("cls");
-            OrdCom.Modificar();
+            cout << "ESTAMOS TRABAJANDO EN ELLO <3" << endl;
             system("pause");
             break;
         case 4:
             system("cls");
-            OrdCom.Eliminar();
+            cout << "ESTAMOS TRABAJANDO EN ELLO <3" << endl;
             system("pause");
             break;
         case 5:
             system("cls");
-            OrdCom.Buscar();
+            cout << "ESTAMOS TRABAJANDO EN ELLO <3" << endl;
             system("pause");
             break;
         case 6:
-            op = 6;
+            system("cls");
+            OrdCom.Modificar();
+            system("pause");
             break;
         }
-    } while (op != 6);
+    } while (op != 7);
     return;
 }
