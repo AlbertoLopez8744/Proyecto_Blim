@@ -3,23 +3,25 @@
 #include <cstring>
 #include <cstdlib>
 #include <string.h>
-#include "C:/Visual Proyect/Proyecto_Blim/Peliculas/Peliculas.cpp"
-#include "C:/Visual Proyect/Proyecto_Blim/Series/Series.cpp"
+#include "Peliculas.cpp"
+#include "Series.cpp"
 
 using namespace std;
 bool typeLog;
 void menuUser();
 void menuAdmin();
-class Logged {
+class Logged
+{
 public:
     char id[15];
     char userName[30];
     char password[35];
     char delim = '\n';
-    void submit(char*,char*,char*);
-}userLog;
+    void submit(char *, char *, char *);
+} userLog;
 
-void Logged::submit(char *_id, char *_user, char *_password){
+void Logged::submit(char *_id, char *_user, char *_password)
+{
     strcpy(this->id, _id);
     strcpy(this->userName, _user);
     strcpy(this->password, _password);
@@ -27,7 +29,7 @@ void Logged::submit(char *_id, char *_user, char *_password){
 
 class Users
 {
- 
+
 private:
     char id[15];
     char userName[30];
@@ -35,7 +37,7 @@ private:
     char delim = '\n';
 
 public:
-    bool admin=false;
+    bool admin = false;
     void setters(char *_id, char *_user, char *_password);
     void setUser(char *_user);
     void setPass(char *_password);
@@ -64,7 +66,8 @@ void Users::setPass(char *_password)
 {
     strcpy(this->password, _password);
 }
-string Users::getUser(){
+string Users::getUser()
+{
     return OrdCom.userName;
 }
 bool Users::checkUser(char *user)
@@ -73,7 +76,7 @@ bool Users::checkUser(char *user)
     string buffer1;
     string buffer2;
     buffer1 = user;
-    ifstream archivo("C:\\Visual Proyect\\Proyecto_Blim\\Usuario\\users.txt", ios::in);
+    ifstream archivo(".data\\users.txt", ios::in);
     if (!archivo.good())
     {
         cout << "No se encontro el archivo" << endl;
@@ -104,7 +107,7 @@ bool Users::checkID(char *_id)
     string buffer1;
     string buffer2;
     buffer1 = _id;
-    ifstream archivo("C:\\Visual Proyect\\Proyecto_Blim\\Usuario\\users.txt", ios::in);
+    ifstream archivo(".data\\users.txt", ios::in);
     if (!archivo.good())
     {
         cout << "No se encontro el archivo" << endl;
@@ -159,9 +162,9 @@ void Users::Agregar()
     cout << "Password: ";
     cin.getline(buffer2, 35);
     setters(buffer, buffer1, buffer2);
-    OrdCom.admin=false;
+    OrdCom.admin = false;
     ofstream archivo;
-    archivo.open("C:\\Visual Proyect\\Proyecto_Blim\\Usuario\\users.txt", ios::app);
+    archivo.open(".data\\users.txt", ios::app);
     archivo.write((char *)&OrdCom, sizeof(OrdCom));
     archivo.close();
 }
@@ -169,7 +172,7 @@ void Users::Mostrar()
 {
 
     ifstream archivo;
-    archivo.open("C:\\Visual Proyect\\Proyecto_Blim\\Usuario\\users.txt", ios::in);
+    archivo.open(".data\\users.txt", ios::in);
     if (!archivo.good())
     {
         cout << "\n El archivo no existe....." << endl;
@@ -195,7 +198,7 @@ void Users::Mostrar()
 void Users::Modificar()
 {
     char valor[15];
-    ifstream archivo("C:\\Visual Proyect\\Proyecto_Blim\\Usuario\\users.txt");
+    ifstream archivo(".data\\users.txt");
     if (!archivo.good())
     {
         cout << "\n El archivo no existe....." << endl;
@@ -203,13 +206,16 @@ void Users::Modificar()
     else
     {
         cout << "MODIFICAR USUARIO" << endl;
-        if(typeLog){
+        if (typeLog)
+        {
             cout << "Ingrese el ID a modificar: ";
             cin.getline(valor, 15);
-        }else{
-            strcpy(valor,userLog.id);
         }
-        ofstream archivo2("C:\\Visual Proyect\\Proyecto_Blim\\Usuario\\temporal.txt", ios::app);
+        else
+        {
+            strcpy(valor, userLog.id);
+        }
+        ofstream archivo2(".data\\temporal.txt", ios::app);
         while (!archivo.eof())
         {
             archivo.read((char *)&OrdCom, sizeof(OrdCom));
@@ -222,71 +228,82 @@ void Users::Modificar()
                 strcpy(OrdCom.id, valor);
                 char buffer[35];
                 cout << "Usuario: " << userName << endl;
-                cout << "Ingrese su password: ";
-                cin.getline(buffer, 35);
+                if (!typeLog)
+                {
+                    cout << "Ingrese su password: ";
+                    cin.getline(buffer, 35);
+                }
+                else
+                {
+                    strcpy(buffer, password);
+                }
                 if (strcmp(buffer, password) == 0)
                 {
                     int opc = 0;
-                    cout << "Que desea modificar" << endl
-                         << "1) Username\t2)Password" << endl
-                         << "Ingrese una opcion: ";
-                    cin >> opc;
-                    cin.ignore();
-                    switch (opc)
+                    while (opc != 3)
                     {
-                    case 1:
-                    {
-                        char aux[30];
-                        bool verify = false;
-                        do
+                        cout << "Que desea modificar" << endl
+                             << "1) Username\t2)Password" << endl
+                             << "3) Cancelar" << endl
+                             << "Ingrese una opcion: ";
+                        cin >> opc;
+                        cin.ignore();
+                        switch (opc)
                         {
-                            cout << "Nuevo Username: ";
-                            cin.getline(aux, 30);
-                            verify = checkUser(aux);
-                            if (verify)
-                            {
-                                cout << "Username repetido intente con otro..." << endl;
-                            }
-                        } while (verify);
-                        setUser(aux);
-                    }
-                    break;
-                    case 2:
-                    {
-                        char aux[35];
-                        char aux2[35];
-                        bool verify = false;
-                        do
+                        case 1:
                         {
-                            cout << "Nuevo Password: ";
-                            cin.getline(aux, 35);
-                            cout << "Confirmar Password: ";
-                            cin.getline(aux2, 35);
-                            if (strcmp(aux, aux2) == 0)
+                            char aux[30];
+                            bool verify = false;
+                            do
                             {
-                                verify = true;
-                            }
-                            else
-                            {
-                                cout << "Los passwords no coinciden\nIntente nuevamente" << endl;
-                            }
-                        } while (!verify);
-
-                        setPass(aux);
-                    }
-                    break;
-                    default:
+                                cout << "Nuevo Username: ";
+                                cin.getline(aux, 30);
+                                verify = checkUser(aux);
+                                if (verify)
+                                {
+                                    cout << "Username repetido intente con otro..." << endl;
+                                }
+                            } while (verify);
+                            setUser(aux);
+                        }
                         break;
+                        case 2:
+                        {
+                            char aux[35];
+                            char aux2[35];
+                            bool verify = false;
+                            do
+                            {
+                                cout << "Nuevo Password: ";
+                                cin.getline(aux, 35);
+                                cout << "Confirmar Password: ";
+                                cin.getline(aux2, 35);
+                                if (strcmp(aux, aux2) == 0)
+                                {
+                                    verify = true;
+                                }
+                                else
+                                {
+                                    cout << "Los passwords no coinciden\nIntente nuevamente" << endl;
+                                }
+                            } while (!verify);
+
+                            setPass(aux);
+                        }
+                        break;
+                        default:
+                            break;
+                        }
                     }
                 }
                 else
                 {
                     cout << "Se acabaron los intentos" << endl;
                     archivo2.close();
-                    remove("C:\\Visual Proyect\\Proyecto_Blim\\Usuario\\temporal.txt");
+                    remove(".data\\temporal.txt");
                     return;
                 }
-                ofstream archivo("C:\\Visual Proyect\\Proyecto_Blim\\Usuario\\users.txt", ios::app);
+                ofstream archivo(".data\\users.txt", ios::app);
                 archivo2.write((char *)&OrdCom, sizeof(OrdCom));
             }
             else
@@ -296,15 +313,15 @@ void Users::Modificar()
         }
         archivo.close();
         archivo2.close();
-        remove("C:\\Visual Proyect\\Proyecto_Blim\\Usuario\\users.txt");
-        rename("C:\\Visual Proyect\\Proyecto_Blim\\Usuario\\temporal.txt", "C:\\Visual Proyect\\Proyecto_Blim\\Usuario\\users.txt");
+        remove(".data\\users.txt");
+        rename(".data\\temporal.txt", ".data\\users.txt");
     }
 }
 void Users::Eliminar()
 {
     char valor[15];
     int opcion = 0;
-    ifstream archivo("C:\\Visual Proyect\\Proyecto_Blim\\Usuario\\users.txt");
+    ifstream archivo(".data\\users.txt");
     if (!archivo.good())
     {
         cout << "\n El archivo no existe....." << endl;
@@ -314,7 +331,7 @@ void Users::Eliminar()
         cout << "ELIMINAR USUARIO" << endl;
         cout << "Ingrese el ID a eliminar: ";
         cin.getline(valor, 15);
-        ofstream archivo2("C:\\Visual Proyect\\Proyecto_Blim\\Usuario\\temporal.txt", ios::app);
+        ofstream archivo2(".data\\temporal.txt", ios::app);
         while (!archivo.eof())
         {
             archivo.read((char *)&OrdCom, sizeof(OrdCom));
@@ -346,9 +363,9 @@ void Users::Eliminar()
         }
         archivo.close();
         archivo2.close();
-        remove("C:\\Visual Proyect\\Proyecto_Blim\\Usuario\\users.txt");
-        char oldname[] = "C:\\Visual Proyect\\Proyecto_Blim\\Usuario\\temporal.txt";
-        char newname[] = "C:\\Visual Proyect\\Proyecto_Blim\\Usuario\\users.txt";
+        remove(".data\\users.txt");
+        char oldname[] = ".data\\temporal.txt";
+        char newname[] = ".data\\users.txt";
         rename(oldname, newname);
     }
 }
@@ -356,7 +373,7 @@ void Users::Buscar()
 {
     char valor[15];
     bool find = false;
-    ifstream archivo("C:\\Visual Proyect\\Proyecto_Blim\\Usuario\\users.txt", ios::in);
+    ifstream archivo(".data\\users.txt", ios::in);
     if (!archivo.good())
     {
         cout << "\n El archivo no existe....." << endl;
@@ -390,10 +407,11 @@ void Users::Buscar()
     }
     archivo.close();
 }
-bool Users::checkLog(){
+bool Users::checkLog()
+{
     char valor[30];
     bool find = false;
-    ifstream archivo("C:\\Visual Proyect\\Proyecto_Blim\\Usuario\\users.txt", ios::in);
+    ifstream archivo(".data\\users.txt", ios::in);
     if (!archivo.good())
     {
         cout << "\n El archivo no existe....." << endl;
@@ -409,22 +427,26 @@ bool Users::checkLog(){
             if (archivo.eof())
 
                 break;
-            if (strcmp(userName, valor)==0)
+            if (strcmp(userName, valor) == 0)
             {
                 find = true;
                 char buffer[35];
-                cout<<"Password: ";
+                cout << "Password: ";
                 cin.getline(buffer, 35);
-                if(strcmp(password,buffer)){
-                    cout<<"INVALID PASSWORD"<<endl;
+                if (strcmp(password, buffer))
+                {
+                    cout << "INVALID PASSWORD" << endl;
                     return false;
                 }
 
-                //cout<<this->admin<<"  "<<OrdCom.admin<<endl;
-                if(this->admin){
+                // cout<<this->admin<<"  "<<OrdCom.admin<<endl;
+                if (this->admin)
+                {
                     typeLog = true;
-                }else if(!this->admin){
-                    userLog.submit(this->id,this->userName,this->password);
+                }
+                else if (!this->admin)
+                {
+                    userLog.submit(this->id, this->userName, this->password);
                     typeLog = false;
                 }
                 system("pause");
@@ -438,32 +460,39 @@ bool Users::checkLog(){
     archivo.close();
     return find;
 }
-void LogIn(){
-    int opc=0;
-    do {
+void LogIn()
+{
+    int opc = 0;
+    do
+    {
         bool log = false;
         log = OrdCom.checkLog();
-        if (log) {
-            //cout<<"Debug: Inicio de Sesion exitoso"<<endl;
-            if(!typeLog)
+        if (log)
+        {
+            // cout<<"Debug: Inicio de Sesion exitoso"<<endl;
+            if (!typeLog)
                 menuUser();
-            if(typeLog)
+            if (typeLog)
                 menuAdmin();
             return;
         }
-        else if (!log) {
+        else if (!log)
+        {
             cout << "Desea intentar nuevamente?" << endl
-                << "1) Si           2)No" << endl
-                << "-> ";
-            cin >> opc; cin.ignore();
-            if (opc == 2) {
+                 << "1) Si           2)No" << endl
+                 << "-> ";
+            cin >> opc;
+            cin.ignore();
+            if (opc == 2)
+            {
                 return;
             }
         }
-        //OrdCom.Mostrar();
-    } while (opc!=2);
+        // OrdCom.Mostrar();
+    } while (opc != 2);
 }
-void SignUp(){
+void SignUp()
+{
     OrdCom.Agregar();
 }
 void menuAdmin()
@@ -478,8 +507,8 @@ void menuAdmin()
         cout << "3.-Modificar " << endl;
         cout << "4.-Eliminar" << endl;
         cout << "5.-Buscar " << endl;
-        cout << "6.-Peliculas"<<endl;
-        cout << "7.-Series"<<endl;
+        cout << "6.-Peliculas" << endl;
+        cout << "7.-Series" << endl;
         cout << "8.-Cerrar Sesion " << endl;
         cout << "Ingresa la opcion->";
         cin >> op;
@@ -526,18 +555,19 @@ void menuAdmin()
     return;
 }
 
-void menuUser(){
+void menuUser()
+{
     int op;
     do
     {
         system("cls");
-        cout << "BIENVENIDO " <<userLog.userName<< endl;
+        cout << "BIENVENIDO " << userLog.userName << endl;
         cout << "1.-Ver Peliculas" << endl;
         cout << "2.-Ver Series" << endl;
         cout << "3.-Listas de Reproduccion " << endl;
         cout << "4.-Historial" << endl;
         cout << "5.-Buscar " << endl;
-        cout << "6.-Configuracion cuenta"<<endl;
+        cout << "6.-Configuracion cuenta" << endl;
         cout << "7.-Cerrar Sesion " << endl;
         cout << "Ingresa la opcion->";
         cin >> op;

@@ -28,7 +28,7 @@ bool Series::checkID(char *_codigo)
     string buffer1;
     string buffer2;
     buffer1 = _codigo;
-    ifstream arc("C:\\Visual Proyect\\Proyecto_Blim\\Series\\Series.txt");
+    ifstream arc(".data\\Series.txt");
     if (!arc.good())
     {
         // cout << "\nEl archivo no existe";
@@ -82,7 +82,7 @@ void Series::Agregar()
     cout << "ESCRIBE EL PUBLICO OBJETIVO: ";
     cin.getline(_publicObj, 15);
     setters(_codigo, _nombre, _temporadas, _capitulos, _descripcion, _publicObj);
-    ofstream Archivo("C:\\Visual Proyect\\Proyecto_Blim\\Series\\Series.txt", ios::app);
+    ofstream Archivo(".data\\Series.txt", ios::app);
     Archivo.write((char *)&serie, sizeof(serie));
 
     Archivo.close();
@@ -91,7 +91,7 @@ void Series::Mostrar()
 {
     system("cls");
 
-    ifstream archivo("C:\\Visual Proyect\\Proyecto_Blim\\Series\\Series.txt");
+    ifstream archivo(".data\\Series.txt");
     if (!archivo.good())
     {
         cout << "\nEl archivo no existe...";
@@ -114,8 +114,8 @@ void Series::Modificar()
     int band = 0;
     char codigo2[10];
 
-    ifstream archivo("C:\\Visual Proyect\\Proyecto_Blim\\Series\\Series.txt");
-    ofstream temporal("C:\\Visual Proyect\\Proyecto_Blim\\Series\\temporal.txt", ios::app);
+    ifstream archivo(".data\\Series.txt");
+    ofstream temporal(".data\\temporal.txt", ios::app);
     if (!archivo.good())
     {
         cout << "\nEl archivo no existe...";
@@ -189,8 +189,8 @@ void Series::Modificar()
     }
     temporal.close();
     archivo.close();
-    remove("C:\\Visual Proyect\\Proyecto_Blim\\Series\\Series.txt");
-    rename("C:\\Visual Proyect\\Proyecto_Blim\\Series\\temporal.txt", "C:\\Visual Proyect\\Proyecto_Blim\\Series\\Series.txt");
+    remove(".data\\Series.txt");
+    rename(".data\\temporal.txt", ".data\\Series.txt");
 }
 
 void Series::Eliminar()
@@ -198,7 +198,7 @@ void Series::Eliminar()
     int band = 0;
     char codigo2[10];
 
-    ifstream archivo("C:\\Visual Proyect\\Proyecto_Blim\\Series\\Series.txt");
+    ifstream archivo(".data\\Series.txt");
     if (!archivo.good())
     {
         cout << "\nEl archivo no existe...";
@@ -228,8 +228,8 @@ void Series::Eliminar()
         if (opc == 1)
         {
             int i = 0;
-            ifstream archivo("C:\\Visual Proyect\\Proyecto_Blim\\Series\\Series.txt");
-            ofstream temporal("C:\\Visual Proyect\\Proyecto_Blim\\Series\\temporal.txt", ios::app);
+            ifstream archivo(".data\\Series.txt");
+            ofstream temporal(".data\\temporal.txt", ios::app);
             while (!archivo.eof())
             {
                 archivo.read((char *)&serie, sizeof(serie));
@@ -243,8 +243,8 @@ void Series::Eliminar()
             } // ciclo while
             temporal.close();
             archivo.close();
-            remove("C:\\Visual Proyect\\Proyecto_Blim\\Series\\Series.txt");
-            rename("C:\\Visual Proyect\\Proyecto_Blim\\Series\\temporal.txt", "C:\\Visual Proyect\\Proyecto_Blim\\Series\\Series.txt");
+            remove(".data\\Series.txt");
+            rename(".data\\temporal.txt", ".data\\Series.txt");
         } // condicional de la opcion
     }     //
 }
@@ -255,7 +255,7 @@ void Series::Buscar()
     int band = 0;
     system("cls");
 
-    ifstream archivo("C:\\Visual Proyect\\Proyecto_Blim\\Series\\Series.txt");
+    ifstream archivo(".data\\Series.txt");
     if (!archivo.good())
     {
         cout << "\nEl archivo no existe...";

@@ -43,7 +43,7 @@ void Movie::Capturar()
     cout << "\nClasificacion: ";
     cin.getline(_publicObj, 15);
     setters(_codigo, _nombre, _descripcion, _time, _publicObj);
-    ofstream archivo("C:\\Visual Proyect\\Proyecto_Blim\\Peliculas\\Peliculas.txt", ios::app);
+    ofstream archivo(".data\\Peliculas.txt", ios::app);
     archivo.write((char *)&movies, sizeof(movies));
     archivo.close();
 }
@@ -53,7 +53,7 @@ bool Movie::checkID(char *_codigo)
     string buffer1;
     string buffer2;
     buffer1 = _codigo;
-    ifstream arc("C:\\Visual Proyect\\Proyecto_Blim\\Peliculas\\Peliculas.txt");
+    ifstream arc(".data\\Peliculas.txt");
     if (!arc.good()){
         //cout << "\nEl archivo no existe";
     }else
@@ -77,7 +77,7 @@ bool Movie::checkID(char *_codigo)
 void Movie::Imprimir()
 {
     int i;
-    ifstream Lectura("C:\\Visual Proyect\\Proyecto_Blim\\Peliculas\\Peliculas.txt");
+    ifstream Lectura(".data\\Peliculas.txt");
     if (!Lectura.good())
     {
         cout << "No existe el archivo\n";
@@ -106,7 +106,7 @@ void Movie::Buscar()
     int band = 1;
     cout << "\nEscribe el codigo de la Pelicula a buscar \n";
     cin.getline(ref, 10);
-    ifstream arc("C:\\Visual Proyect\\Proyecto_Blim\\Peliculas\\Peliculas.txt");
+    ifstream arc(".data\\Peliculas.txt");
     if (!arc.good())
         cout << "\nEl archivo no existe";
     else
@@ -138,8 +138,8 @@ void Movie::Eliminar()
     char prodMod[10];
     bool b;
     int resp;
-    ifstream arc("C:\\Visual Proyect\\Proyecto_Blim\\Peliculas\\Peliculas.txt");
-    ofstream arcTemp("C:\\Visual Proyect\\Proyecto_Blim\\Peliculas\\temporalauto.txt", ios::app);
+    ifstream arc(".data\\Peliculas.txt");
+    ofstream arcTemp(".data\\temporalauto.txt", ios::app);
     if (!arc.good())
         cout << "\n EL REGISTRO NO EXISTE \n ";
     else
@@ -184,8 +184,8 @@ void Movie::Eliminar()
         arcTemp.close();
         if (!b)
             cout << "\n No se encontro arhcivo ";
-        remove("C:\\Visual Proyect\\Proyecto_Blim\\Peliculas\\Peliculas.txt");
-        rename("C:\\Visual Proyect\\Proyecto_Blim\\Peliculas\\temporalauto.txt", "C:\\Visual Proyect\\Proyecto_Blim\\Peliculas\\Peliculas.txt");
+        remove(".data\\Peliculas.txt");
+        rename(".data\\temporalauto.txt", ".data\\Peliculas.txt");
     }
 }
 void Movie::Modificar()
@@ -194,8 +194,8 @@ void Movie::Modificar()
     int opcion;
     char prodMod[10];
     bool b;
-    ifstream arc("C:\\Visual Proyect\\Proyecto_Blim\\Peliculas\\Peliculas.txt");
-    ofstream arcTemp("C:\\Visual Proyect\\Proyecto_Blim\\Peliculas\\temporalauto.txt", ios::app);
+    ifstream arc(".data\\Peliculas.txt");
+    ofstream arcTemp(".data\\temporalauto.txt", ios::app);
     if (!arc.good())
         cout << "\n EL REGISTRO NO EXISTE \n ";
     else
@@ -258,8 +258,8 @@ void Movie::Modificar()
         arcTemp.close();
         if (!b)
             cout << "\n No se encontro arhcivo ";
-        remove("C:\\Visual Proyect\\Proyecto_Blim\\Peliculas\\Peliculas.txt");
-        rename("C:\\Visual Proyect\\Proyecto_Blim\\Peliculas\\temporalauto.txt", "C:\\Visual Proyect\\Proyecto_Blim\\Peliculas\\Peliculas.txt");
+        remove(".data\\Peliculas.txt");
+        rename(".data\\temporalauto.txt", ".data\\Peliculas.txt");
     }
 }
 void adminMovies()
@@ -279,6 +279,7 @@ void adminMovies()
             break;
         case 2:
             movies.Imprimir();
+            system("pause");
             system("cls");
             break;
         case 3:
