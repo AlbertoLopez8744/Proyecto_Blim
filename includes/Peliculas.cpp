@@ -2,6 +2,16 @@
 #include <fstream>
 #include <string.h>
 using namespace std;
+class IDControl
+{
+public:
+    char codigo[10];
+    char delim = '\n';
+    void set(char* _codigo);
+}MediaIDX;
+void IDControl::set(char* _codigo){
+    strcpy(codigo,_codigo);
+}
 class Movie
 {
 public:
@@ -29,10 +39,13 @@ void Movie::Capturar()
     char _codigo[10], _nombre[100], _descripcion[200], _time[15], _publicObj[15];
     do
     {
+        char buffer[10];
         cout << "\nCodigo: ";
 
-        cin.getline(_codigo, 10);
-        verified = checkID(_codigo);
+        cin.getline(buffer, 10);
+        verified = checkID(buffer);
+        if(!verified)
+            strcpy(_codigo,buffer);
     } while (verified);
     cout << "\nNombre: ";
     cin.getline(_nombre, 100);
@@ -43,9 +56,13 @@ void Movie::Capturar()
     cout << "\nClasificacion: ";
     cin.getline(_publicObj, 15);
     setters(_codigo, _nombre, _descripcion, _time, _publicObj);
+    MediaIDX.set(_codigo);
     ofstream archivo(".data\\Peliculas.txt", ios::app);
     archivo.write((char *)&movies, sizeof(movies));
     archivo.close();
+    ofstream media(".data\\mediaID.txt", ios::app);
+    media.write((char*)&MediaIDX,sizeof(MediaIDX));
+    media.close();
 }
 bool Movie::checkID(char *_codigo)
 {
@@ -53,14 +70,16 @@ bool Movie::checkID(char *_codigo)
     string buffer1;
     string buffer2;
     buffer1 = _codigo;
-    ifstream arc(".data\\Peliculas.txt");
-    if (!arc.good()){
-        //cout << "\nEl archivo no existe";
-    }else
+    ifstream arc(".data\\mediaID.txt");
+    if (!arc.good())
+    {
+        // cout << "\nEl archivo no existe";
+    }
+    else
     {
         while (!arc.eof())
         {
-            arc.read((char *)&movies, sizeof(movies));
+            arc.read((char *)&MediaIDX, sizeof(MediaIDX));
             buffer2 = codigo;
             if (arc.eof())
                 break;
@@ -139,7 +158,7 @@ void Movie::Eliminar()
     bool b;
     int resp;
     ifstream arc(".data\\Peliculas.txt");
-    ofstream arcTemp(".data\\temporalauto.txt", ios::app);
+    ofstream arcTemp(".data\\Ptemporal.txt", ios::app);
     if (!arc.good())
         cout << "\n EL REGISTRO NO EXISTE \n ";
     else
@@ -185,7 +204,7 @@ void Movie::Eliminar()
         if (!b)
             cout << "\n No se encontro arhcivo ";
         remove(".data\\Peliculas.txt");
-        rename(".data\\temporalauto.txt", ".data\\Peliculas.txt");
+        rename(".data\\Ptemporal.txt", ".data\\Peliculas.txt");
     }
 }
 void Movie::Modificar()
@@ -195,7 +214,7 @@ void Movie::Modificar()
     char prodMod[10];
     bool b;
     ifstream arc(".data\\Peliculas.txt");
-    ofstream arcTemp(".data\\temporalauto.txt", ios::app);
+    ofstream arcTemp(".data\\Ptemporal.txt", ios::app);
     if (!arc.good())
         cout << "\n EL REGISTRO NO EXISTE \n ";
     else
@@ -210,47 +229,50 @@ void Movie::Modificar()
                 break;
             if (strcmp(codigo, prodMod) == 0 && !b)
             {
-                cout << endl
-                     << "Codigo : " << codigo << endl
-                     << "Nombre : " << nombre << endl
-                     << "Descripcion : " << descripcion << endl
-                     << "Duracion : " << time << endl
-                     << "Clasificacion : " << publicObj << endl
-                     << "   Que desea realizar ? " << endl
-                     << "(1) Modificar Nombre: " << endl
-                     << "(2) Modificar Descripcion: " << endl
-                     << "(3) Modificar Duracion: " << endl
-                     << "(4) Modificar Clasificacion: " << endl
-                     << "(5) Regresar: " << endl
-                     << "Elige la opcion a realizar: ";
-                cin >> opcion;
-                cin.ignore();
-                switch (opcion)
+                do
                 {
-                case 1: //////Nombre
-                    cout << "\n Nombre : ";
-                    cin.getline(nombre, 100);
-                    break;
-                case 2: /// Descripcion
-                    cout << "\n Descripcion : ";
-                    cin.getline(descripcion, 200);
-                    break;
-                case 3: /// Duracion
-                    cout << "\n Duracion : ";
-                    cin.getline(time, 15);
-                    break;
-                case 4: /// Clasificacion
-                    cout << "\n Clasificacion : ";
-                    cin.getline(publicObj, 15);
-                    break;
-                case 5:
-                    b = true;
-                    break;
-                default:
-                    cout << "\n No se encontro la opcion ";
-                }
-                if (opcion != 5)
-                    b = true;
+                    cout << endl
+                         << "Codigo : " << codigo << endl
+                         << "Nombre : " << nombre << endl
+                         << "Descripcion : " << descripcion << endl
+                         << "Duracion : " << time << endl
+                         << "Clasificacion : " << publicObj << endl
+                         << "   Que desea realizar ? " << endl
+                         << "(1) Modificar Nombre: " << endl
+                         << "(2) Modificar Descripcion: " << endl
+                         << "(3) Modificar Duracion: " << endl
+                         << "(4) Modificar Clasificacion: " << endl
+                         << "(5) Regresar: " << endl
+                         << "Elige la opcion a realizar: ";
+                    cin >> opcion;
+                    cin.ignore();
+                    switch (opcion)
+                    {
+                    case 1: //////Nombre
+                        cout << "\n Nombre : ";
+                        cin.getline(nombre, 100);
+                        break;
+                    case 2: /// Descripcion
+                        cout << "\n Descripcion : ";
+                        cin.getline(descripcion, 200);
+                        break;
+                    case 3: /// Duracion
+                        cout << "\n Duracion : ";
+                        cin.getline(time, 15);
+                        break;
+                    case 4: /// Clasificacion
+                        cout << "\n Clasificacion : ";
+                        cin.getline(publicObj, 15);
+                        break;
+                    case 5:
+                        b = true;
+                        break;
+                    default:
+                        cout << "\n No se encontro la opcion ";
+                    }
+                    if (opcion != 5)
+                        b = true;
+                } while (opcion != 5);
             }
             arcTemp.write((char *)&movies, sizeof(movies));
         }
@@ -259,7 +281,7 @@ void Movie::Modificar()
         if (!b)
             cout << "\n No se encontro arhcivo ";
         remove(".data\\Peliculas.txt");
-        rename(".data\\temporalauto.txt", ".data\\Peliculas.txt");
+        rename(".data\\Ptemporal.txt", ".data\\Peliculas.txt");
     }
 }
 void adminMovies()
@@ -272,7 +294,7 @@ void adminMovies()
         cin.ignore();
         switch (op)
         {
-        case 1:  
+        case 1:
             movies.Capturar();
             system("pause");
             system("cls");
@@ -305,17 +327,18 @@ void userMovies()
     int op;
     do
     {
-        cout << endl << "MENU PELICULAS"<<endl
-        << "[1] CATALOGO" << endl
-        << "[2] BUSCAR" << endl
-        << "[3] VER" << endl
-        << "[4] SALIR" << endl
-        << "-> ";
+        cout << endl
+             << "MENU PELICULAS" << endl
+             << "[1] CATALOGO" << endl
+             << "[2] BUSCAR" << endl
+             << "[3] VER" << endl
+             << "[4] SALIR" << endl
+             << "-> ";
         cin >> op;
         cin.ignore();
         switch (op)
         {
-        case 1:  
+        case 1:
             movies.Imprimir();
             system("pause");
             system("cls");
@@ -326,11 +349,10 @@ void userMovies()
             system("cls");
             break;
         case 3:
-            cout << "Estamos trabajando en ello <3"<<endl;
+            cout << "Estamos trabajando en ello <3" << endl;
             system("pause");
             system("cls");
             break;
-        
         }
     } while (op != 4);
     return;

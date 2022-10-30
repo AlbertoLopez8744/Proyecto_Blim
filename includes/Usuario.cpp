@@ -215,7 +215,7 @@ void Users::Modificar()
         {
             strcpy(valor, userLog.id);
         }
-        ofstream archivo2(".data\\temporal.txt", ios::app);
+        ofstream archivo2(".data\\Utemporal.txt", ios::app);
         while (!archivo.eof())
         {
             archivo.read((char *)&OrdCom, sizeof(OrdCom));
@@ -300,7 +300,7 @@ void Users::Modificar()
                 {
                     cout << "Se acabaron los intentos" << endl;
                     archivo2.close();
-                    remove(".data\\temporal.txt");
+                    remove(".data\\Utemporal.txt");
                     return;
                 }
                 ofstream archivo(".data\\users.txt", ios::app);
@@ -314,7 +314,7 @@ void Users::Modificar()
         archivo.close();
         archivo2.close();
         remove(".data\\users.txt");
-        rename(".data\\temporal.txt", ".data\\users.txt");
+        rename(".data\\Utemporal.txt", ".data\\users.txt");
     }
 }
 void Users::Eliminar()
@@ -331,7 +331,7 @@ void Users::Eliminar()
         cout << "ELIMINAR USUARIO" << endl;
         cout << "Ingrese el ID a eliminar: ";
         cin.getline(valor, 15);
-        ofstream archivo2(".data\\temporal.txt", ios::app);
+        ofstream archivo2(".data\\Utemporal.txt", ios::app);
         while (!archivo.eof())
         {
             archivo.read((char *)&OrdCom, sizeof(OrdCom));
@@ -364,7 +364,7 @@ void Users::Eliminar()
         archivo.close();
         archivo2.close();
         remove(".data\\users.txt");
-        char oldname[] = ".data\\temporal.txt";
+        char oldname[] = ".data\\Utemporal.txt";
         char newname[] = ".data\\users.txt";
         rename(oldname, newname);
     }
@@ -577,12 +577,10 @@ void menuUser()
         case 1:
             system("cls");
             userMovies();
-            system("pause");
             break;
         case 2:
             system("cls");
-            serie.Mostrar();
-            system("pause");
+            userSeries();
             break;
         case 3:
             system("cls");

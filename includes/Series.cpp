@@ -4,7 +4,16 @@
 #include "cstring"
 
 using namespace std;
-
+class idControl
+{
+public:
+    char codigo[10];
+    char delim = '\n';
+    void set(char* _codigo);
+}mediaIDX;
+void idControl::set(char* _codigo){
+    strcpy(codigo,_codigo);
+}
 class Series
 {
 public:
@@ -28,7 +37,7 @@ bool Series::checkID(char *_codigo)
     string buffer1;
     string buffer2;
     buffer1 = _codigo;
-    ifstream arc(".data\\Series.txt");
+    ifstream arc(".data\\mediaID.txt");
     if (!arc.good())
     {
         // cout << "\nEl archivo no existe";
@@ -37,7 +46,7 @@ bool Series::checkID(char *_codigo)
     {
         while (!arc.eof())
         {
-            arc.read((char *)&serie, sizeof(serie));
+            arc.read((char *)&mediaIDX, sizeof(mediaIDX));
             buffer2 = codigo;
             if (arc.eof())
                 break;
@@ -66,10 +75,12 @@ void Series::Agregar()
     char _codigo[10], _nombre[100], _temporadas[15], _capitulos[15], _descripcion[200], _publicObj[15];
     do
     {
-
+        char buffer[10];
         cout << "ESCRIBE EL CODIGO DE LA SERIE: ";
-        cin.getline(_codigo, 10);
-        verified = checkID(_codigo);
+        cin.getline(buffer, 10);
+        verified = checkID(buffer);
+        if(!verified)
+            strcpy(_codigo,buffer);
     } while (verified);
     cout << "ESCRIBE EL NOMBRE DE LA SERIE: ";
     cin.getline(_nombre, 100);
@@ -82,10 +93,13 @@ void Series::Agregar()
     cout << "ESCRIBE EL PUBLICO OBJETIVO: ";
     cin.getline(_publicObj, 15);
     setters(_codigo, _nombre, _temporadas, _capitulos, _descripcion, _publicObj);
+    mediaIDX.set(_codigo);
     ofstream Archivo(".data\\Series.txt", ios::app);
     Archivo.write((char *)&serie, sizeof(serie));
-
     Archivo.close();
+    ofstream media(".data\\mediaID.txt", ios::app);
+    media.write((char*)&mediaIDX,sizeof(mediaIDX));
+    media.close();
 }
 void Series::Mostrar()
 {
@@ -115,7 +129,7 @@ void Series::Modificar()
     char codigo2[10];
 
     ifstream archivo(".data\\Series.txt");
-    ofstream temporal(".data\\temporal.txt", ios::app);
+    ofstream temporal(".data\\Stemporal.txt", ios::app);
     if (!archivo.good())
     {
         cout << "\nEl archivo no existe...";
@@ -131,57 +145,63 @@ void Series::Modificar()
                 break;
             if (strcmp(codigo2, codigo) == 0)
             {
-                cout << "Codigo: " << codigo << "\nNombre: " << nombre << "\nDescripcio: " << descripcion << "\nTemporadas:  " << temporadas << "\nCapitulos: " << capitulos << "\nPublico Objetivo: " << publicObj << endl
-                     << endl;
+                cout << "Codigo: " << codigo
+                     << "\nNombre: " << nombre
+                     << "\nDescripcio: " << descripcion
+                     << "\nTemporadas:  " << temporadas
+                     << "\nCapitulos: " << capitulos
+                     << "\nPublico Objetivo: " << publicObj << endl;
                 cout << "DESEA MODIFICAR?\n1.SI\n0.NO\n>: ";
                 cin >> opc;
                 cin.ignore();
                 if (opc == 1)
                 {
                     int opcion = 0;
-                    cout << endl
-                         << "Codigo : " << codigo << endl
-                         << "Nombre : " << nombre << endl
-                         << "Descripcion : " << descripcion << endl
-                         << "#Temporadas #" << temporadas << endl
-                         << "#Capitulos #" << capitulos << endl
-                         << "Clasificacion : " << publicObj << endl
-                         << "   Que desea realizar ? " << endl
-                         << "(1) Modificar Nombre: " << endl
-                         << "(2) Modificar Descripcion: " << endl
-                         << "(3) Modificar # Temporadas: " << endl
-                         << "(4) Modificar # Capitulos" << endl
-                         << "(5) Modificar Clasificacion: " << endl
-                         << "(6) Regresar: " << endl
-                         << "Elige la opcion a realizar: ";
-                    cin >> opcion;
-                    cin.ignore();
-                    switch (opcion)
+                    do
                     {
-
-                    case 1: //////Nombre
-                        cout << "ESCRIBE EL NOMBRE DE LA SERIE: ";
-                        cin.getline(nombre, 100);
-                        break;
-                    case 2: /// Descripcion
-                        cout << "ESCRIBE LA DESCRIPCION DE LA SERIE: ";
-                        cin.getline(descripcion, 200);
-                        break;
-                    case 3: /// Temporadas
-                        cout << "ESCRIBE EL NUMERO DE TEMPORADAS: ";
-                        cin.getline(temporadas, 15);
-                        break;
-                    case 4: /// Capitulos
-                        cout << "ESCRIBE EL NUMERO DE CAPITULOS: ";
-                        cin.getline(capitulos, 15);
-                        break;
-                    case 5: /// Clasificacion
-                        cout << "ESCRIBE EL PUBLICO OBJETIVO: ";
-                        cin.getline(publicObj, 15);
-                        break;
-                    default:
-                        cout << "\n No se encontro la opcion ";
-                    }
+                        cout << endl
+                             << "Codigo : " << codigo << endl
+                             << "Nombre : " << nombre << endl
+                             << "Descripcion : " << descripcion << endl
+                             << "#Temporadas #" << temporadas << endl
+                             << "#Capitulos #" << capitulos << endl
+                             << "Clasificacion : " << publicObj << endl
+                             << "   Que desea realizar ? " << endl
+                             << "(1) Modificar Nombre: " << endl
+                             << "(2) Modificar Descripcion: " << endl
+                             << "(3) Modificar # Temporadas: " << endl
+                             << "(4) Modificar # Capitulos" << endl
+                             << "(5) Modificar Clasificacion: " << endl
+                             << "(6) Regresar: " << endl
+                             << "Elige la opcion a realizar: ";
+                        cin >> opcion;
+                        cin.ignore();
+                        switch (opcion)
+                        {
+                        case 1: //////Nombre
+                            cout << "ESCRIBE EL NOMBRE DE LA SERIE: ";
+                            cin.getline(nombre, 100);
+                            break;
+                        case 2: /// Descripcion
+                            cout << "ESCRIBE LA DESCRIPCION DE LA SERIE: ";
+                            cin.getline(descripcion, 200);
+                            break;
+                        case 3: /// Temporadas
+                            cout << "ESCRIBE EL NUMERO DE TEMPORADAS: ";
+                            cin.getline(temporadas, 15);
+                            break;
+                        case 4: /// Capitulos
+                            cout << "ESCRIBE EL NUMERO DE CAPITULOS: ";
+                            cin.getline(capitulos, 15);
+                            break;
+                        case 5: /// Clasificacion
+                            cout << "ESCRIBE EL PUBLICO OBJETIVO: ";
+                            cin.getline(publicObj, 15);
+                            break;
+                        default:
+                            cout << "\n No se encontro la opcion ";
+                        }
+                    } while (opcion != 6);
                 }
             }
             temporal.write((char *)&serie, sizeof(serie));
@@ -190,7 +210,7 @@ void Series::Modificar()
     temporal.close();
     archivo.close();
     remove(".data\\Series.txt");
-    rename(".data\\temporal.txt", ".data\\Series.txt");
+    rename(".data\\Stemporal.txt", ".data\\Series.txt");
 }
 
 void Series::Eliminar()
@@ -229,7 +249,7 @@ void Series::Eliminar()
         {
             int i = 0;
             ifstream archivo(".data\\Series.txt");
-            ofstream temporal(".data\\temporal.txt", ios::app);
+            ofstream temporal(".data\\Stemporal.txt", ios::app);
             while (!archivo.eof())
             {
                 archivo.read((char *)&serie, sizeof(serie));
@@ -244,7 +264,7 @@ void Series::Eliminar()
             temporal.close();
             archivo.close();
             remove(".data\\Series.txt");
-            rename(".data\\temporal.txt", ".data\\Series.txt");
+            rename(".data\\Stemporal.txt", ".data\\Series.txt");
         } // condicional de la opcion
     }     //
 }
@@ -320,37 +340,33 @@ void adminSeries()
 
 void userSeries()
 {
-    cout << "\n\n\t\tMENU SERIES ADMIN\n\n";
+    cout << "\n\n\t\tMENU SERIES \n\n";
     do
     {
-        cout << "\n\tSELECCIONE LA OPCION DESEADA\n1.- AGREGAR\n2.- MOSTRAR\n3.- BUSCAR\n4.- MODIFICAR\n5.- ELIMINAR\n6.- SALIR\n>: ";
+        cout << "\n\tSELECCIONE LA OPCION DESEADA"<< endl
+        << "[1] CATALOGO" << endl
+        << "[2] BUSCAR" << endl
+        << "[3] VER" << endl
+        << "[4] SALIR" << endl
+        << "-> ";
         cin >> opc;
         cin.ignore();
         switch (opc)
         {
         case 1:
-            serie.Agregar();
-            break;
-        case 2:
             serie.Mostrar();
             break;
-        case 3:
+        case 2:
             serie.Buscar();
             break;
-        case 4:
-            serie.Modificar();
-            break;
-        case 5:
-            serie.Eliminar();
-            break;
-        case 6:
-            cout << "Datos guardados y cerrando......" << endl;
+        case 3:
+            cout<<"We have work in it <3"<<endl;
             break;
         default:
             cout << "OPCION INCORRECTA...." << endl;
         }
         system("Pause");
         system("cls");
-    } while (opc != 6);
+    } while (opc != 4);
     return;
 }
