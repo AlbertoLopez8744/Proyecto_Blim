@@ -37,7 +37,7 @@ bool Series::checkID(char *_codigo)
     string buffer1;
     string buffer2;
     buffer1 = _codigo;
-    ifstream arc(".data\\mediaID.txt");
+    ifstream arc(".data\\Series.txt");
     if (!arc.good())
     {
         // cout << "\nEl archivo no existe";
@@ -46,7 +46,7 @@ bool Series::checkID(char *_codigo)
     {
         while (!arc.eof())
         {
-            arc.read((char *)&mediaIDX, sizeof(mediaIDX));
+            arc.read((char *)&serie, sizeof(serie));
             buffer2 = codigo;
             if (arc.eof())
                 break;
@@ -75,12 +75,9 @@ void Series::Agregar()
     char _codigo[10], _nombre[100], _temporadas[15], _capitulos[15], _descripcion[200], _publicObj[15];
     do
     {
-        char buffer[10];
         cout << "ESCRIBE EL CODIGO DE LA SERIE: ";
-        cin.getline(buffer, 10);
-        verified = checkID(buffer);
-        if(!verified)
-            strcpy(_codigo,buffer);
+        cin.getline(_codigo, 10);
+        verified = checkID(_codigo);
     } while (verified);
     cout << "ESCRIBE EL NOMBRE DE LA SERIE: ";
     cin.getline(_nombre, 100);
@@ -93,13 +90,10 @@ void Series::Agregar()
     cout << "ESCRIBE EL PUBLICO OBJETIVO: ";
     cin.getline(_publicObj, 15);
     setters(_codigo, _nombre, _temporadas, _capitulos, _descripcion, _publicObj);
-    mediaIDX.set(_codigo);
     ofstream Archivo(".data\\Series.txt", ios::app);
     Archivo.write((char *)&serie, sizeof(serie));
+
     Archivo.close();
-    ofstream media(".data\\mediaID.txt", ios::app);
-    media.write((char*)&mediaIDX,sizeof(mediaIDX));
-    media.close();
 }
 void Series::Mostrar()
 {

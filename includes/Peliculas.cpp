@@ -2,16 +2,6 @@
 #include <fstream>
 #include <string.h>
 using namespace std;
-class IDControl
-{
-public:
-    char codigo[10];
-    char delim = '\n';
-    void set(char* _codigo);
-}MediaIDX;
-void IDControl::set(char* _codigo){
-    strcpy(codigo,_codigo);
-}
 class Movie
 {
 public:
@@ -39,13 +29,10 @@ void Movie::Capturar()
     char _codigo[10], _nombre[100], _descripcion[200], _time[15], _publicObj[15];
     do
     {
-        char buffer[10];
         cout << "\nCodigo: ";
 
-        cin.getline(buffer, 10);
-        verified = checkID(buffer);
-        if(!verified)
-            strcpy(_codigo,buffer);
+        cin.getline(_codigo, 10);
+        verified = checkID(_codigo);
     } while (verified);
     cout << "\nNombre: ";
     cin.getline(_nombre, 100);
@@ -56,13 +43,9 @@ void Movie::Capturar()
     cout << "\nClasificacion: ";
     cin.getline(_publicObj, 15);
     setters(_codigo, _nombre, _descripcion, _time, _publicObj);
-    MediaIDX.set(_codigo);
     ofstream archivo(".data\\Peliculas.txt", ios::app);
     archivo.write((char *)&movies, sizeof(movies));
     archivo.close();
-    ofstream media(".data\\mediaID.txt", ios::app);
-    media.write((char*)&MediaIDX,sizeof(MediaIDX));
-    media.close();
 }
 bool Movie::checkID(char *_codigo)
 {
@@ -70,16 +53,14 @@ bool Movie::checkID(char *_codigo)
     string buffer1;
     string buffer2;
     buffer1 = _codigo;
-    ifstream arc(".data\\mediaID.txt");
-    if (!arc.good())
-    {
-        // cout << "\nEl archivo no existe";
-    }
-    else
+    ifstream arc(".data\\Peliculas.txt");
+    if (!arc.good()){
+        //cout << "\nEl archivo no existe";
+    }else
     {
         while (!arc.eof())
         {
-            arc.read((char *)&MediaIDX, sizeof(MediaIDX));
+            arc.read((char *)&movies, sizeof(movies));
             buffer2 = codigo;
             if (arc.eof())
                 break;
