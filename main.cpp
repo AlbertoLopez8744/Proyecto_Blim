@@ -2,11 +2,13 @@
 #include "includes/Usuario.cpp"
 using namespace std;
 
-//void Recovery();
+void Recovery(){
+    x.Recovery();
+}
 
 int main(){
-    //Recovery();
-    
+    Recovery();
+    system("cls");
     bool out = false;
     do
     {

@@ -5,6 +5,7 @@
 #include <string.h>
 #include "Peliculas.cpp"
 #include "Series.cpp"
+#include "ListasRep.cpp"
 
 using namespace std;
 bool typeLog;
@@ -16,15 +17,17 @@ public:
     char id[15];
     char userName[30];
     char password[35];
+    bool t;
     char delim = '\n';
-    void submit(char *, char *, char *);
+    void submit(char *, char *, char *, bool);
 } userLog;
 
-void Logged::submit(char *_id, char *_user, char *_password)
+void Logged::submit(char *_id, char *_user, char *_password, bool _t)
 {
     strcpy(this->id, _id);
     strcpy(this->userName, _user);
     strcpy(this->password, _password);
+    this->t = _t;
 }
 
 class Users
@@ -442,11 +445,12 @@ bool Users::checkLog()
                 // cout<<this->admin<<"  "<<OrdCom.admin<<endl;
                 if (this->admin)
                 {
+                    userLog.submit(this->id, this->userName, this->password, true);
                     typeLog = true;
                 }
                 else if (!this->admin)
                 {
-                    userLog.submit(this->id, this->userName, this->password);
+                    userLog.submit(this->id, this->userName, this->password, false);
                     typeLog = false;
                 }
                 system("pause");
@@ -509,7 +513,11 @@ void menuAdmin()
         cout << "5.-Buscar " << endl;
         cout << "6.-Peliculas" << endl;
         cout << "7.-Series" << endl;
-        cout << "8.-Cerrar Sesion " << endl;
+        cout << "8.-Listas de reproduccion" << endl;
+        cout << "9.-Historiales de usuario" << endl;
+        cout << "10.-Pagos" << endl;
+        cout << "11.-Facturas" << endl;
+        cout << "12.-Cerrar Sesion " << endl;
         cout << "Ingresa la opcion->";
         cin >> op;
         cin.ignore();
@@ -550,8 +558,14 @@ void menuAdmin()
             adminSeries();
             system("pause");
             break;
+        case 8:
+            system("cls");
+            cout<<userLog.id<<endl;
+            menuL(userLog.id,true);
+            system("pause");
+            break;
         }
-    } while (op != 8);
+    } while (op != 12);
     return;
 }
 
@@ -584,7 +598,8 @@ void menuUser()
             break;
         case 3:
             system("cls");
-            cout << "ESTAMOS TRABAJANDO EN ELLO <3" << endl;
+            menuL(userLog.id,false);
+            //cout << "ESTAMOS TRABAJANDO EN ELLO <3" << endl;
             system("pause");
             break;
         case 4:

@@ -5,7 +5,8 @@
         "xstring": "cpp",
         "fstream": "cpp",
         "istream": "cpp",
-        "iosfwd": "cpp"
+        "iosfwd": "cpp",
+        "xiosbase": "cpp"
     },
     "C_Cpp.errorSquiggles": "Enabled"
 }

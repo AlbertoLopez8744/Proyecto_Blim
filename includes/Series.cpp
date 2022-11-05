@@ -4,16 +4,6 @@
 #include "cstring"
 
 using namespace std;
-class idControl
-{
-public:
-    char codigo[10];
-    char delim = '\n';
-    void set(char* _codigo);
-}mediaIDX;
-void idControl::set(char* _codigo){
-    strcpy(codigo,_codigo);
-}
 class Series
 {
 public:
