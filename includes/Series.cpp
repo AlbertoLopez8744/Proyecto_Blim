@@ -17,6 +17,8 @@ public:
     void Buscar();
     void menu();
     void setters(char *, char *, char *, char *, char *, char *);
+    void adminSeries();
+    void userSeries();
 } serie;
 
 int opc = 0;
@@ -285,7 +287,7 @@ void Series::Buscar()
     }
     archivo.close();
 }
-void adminSeries()
+void Series::adminSeries()
 {
     cout << "\n\n\t\tMENU SERIES ADMIN\n\n";
     do
@@ -322,7 +324,7 @@ void adminSeries()
     return;
 }
 
-void userSeries()
+void Series::userSeries()
 {
     cout << "\n\n\t\tMENU SERIES \n\n";
     do

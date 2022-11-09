@@ -53,6 +53,9 @@ public:
     void Buscar();
     void Eliminar();
     bool checkLog();
+    void LogIn();
+    void menuAdmin();
+    void menuUser();
 } OrdCom;
 
 void Users::setters(char *_id, char *_user, char *_password)
@@ -464,7 +467,7 @@ bool Users::checkLog()
     archivo.close();
     return find;
 }
-void LogIn()
+void Users::LogIn()
 {
     int opc = 0;
     do
@@ -475,9 +478,9 @@ void LogIn()
         {
             // cout<<"Debug: Inicio de Sesion exitoso"<<endl;
             if (!typeLog)
-                menuUser();
+                OrdCom.menuUser();
             if (typeLog)
-                menuAdmin();
+                OrdCom.menuAdmin();
             return;
         }
         else if (!log)
@@ -495,11 +498,7 @@ void LogIn()
         // OrdCom.Mostrar();
     } while (opc != 2);
 }
-void SignUp()
-{
-    OrdCom.Agregar();
-}
-void menuAdmin()
+void Users::menuAdmin()
 {
     int op;
     do
@@ -550,18 +549,18 @@ void menuAdmin()
             break;
         case 6:
             system("cls");
-            adminMovies();
+            movies.adminMovies();
             system("pause");
             break;
         case 7:
             system("cls");
-            adminSeries();
+            serie.adminSeries();
             system("pause");
             break;
         case 8:
             system("cls");
             cout<<userLog.id<<endl;
-            menuL(userLog.id,true);
+            listR.menuL(userLog.id,true);
             system("pause");
             break;
         }
@@ -569,7 +568,7 @@ void menuAdmin()
     return;
 }
 
-void menuUser()
+void Users::menuUser()
 {
     int op;
     do
@@ -590,15 +589,15 @@ void menuUser()
         {
         case 1:
             system("cls");
-            userMovies();
+            movies.userMovies();
             break;
         case 2:
             system("cls");
-            userSeries();
+            serie.userSeries();
             break;
         case 3:
             system("cls");
-            menuL(userLog.id,false);
+            listR.menuL(userLog.id,false);
             //cout << "ESTAMOS TRABAJANDO EN ELLO <3" << endl;
             system("pause");
             break;

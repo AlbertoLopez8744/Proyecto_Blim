@@ -14,6 +14,8 @@ public:
     void Eliminar();
     void Modificar();
     void setters(char *, char *, char *, char *, char *);
+    void adminMovies();
+    void userMovies();
 } movies;
 void Movie::setters(char *_codigo, char *_nombre, char *_descripcion, char *_time, char *_publicObj)
 {
@@ -265,7 +267,7 @@ void Movie::Modificar()
         rename(".data\\Ptemporal.txt", ".data\\Peliculas.txt");
     }
 }
-void adminMovies()
+void Movie::adminMovies()
 {
     int op;
     do
@@ -303,7 +305,7 @@ void adminMovies()
     } while (op != 6);
     return;
 }
-void userMovies()
+void Movie::userMovies()
 {
     int op;
     do

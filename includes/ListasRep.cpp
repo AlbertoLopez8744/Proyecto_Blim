@@ -40,7 +40,8 @@ public:
     void Mostrar_Indice();
     void Recovery();
     void ChangeCont();
-} x;
+    void menuL(char _id[15], bool _ad);
+} listR;
 
 class Indice
 {
@@ -145,14 +146,14 @@ void ListaRepro::capturar(char _idUser[15])
     // cout << y.pos << endl;
     if (cont)
     {
-        y.pos = y.pos + sizeof(x);
+        y.pos = y.pos + sizeof(listR);
     }
     else
     {
         y.pos = a.tellp();
     }
     // cout << y.pos << endl;
-    a.write((char *)&x, sizeof(x));
+    a.write((char *)&listR, sizeof(listR));
     a.close();
     strcpy(y.idList, idList);
     strcpy(y.idUser, idUser);
@@ -178,18 +179,18 @@ void ListaRepro::mostrar()
              << "----------------------------------" << endl;
         while (!a.eof())
         {
-            a.read((char *)&x, sizeof(x));
+            a.read((char *)&listR, sizeof(listR));
             if (a.eof())
                 break;
-            if (strcmp(x.idUser, userlog.id) == 0 || userlog.ad == true)
+            if (strcmp(listR.idUser, userlog.id) == 0 || userlog.ad == true)
             {
                 if (userlog.ad == true)
-                    cout << "UserID: " << x.idUser << endl;
-                cout << "ID:" << x.idList << endl
-                     << "Nombre: " << x.nameList << endl;
+                    cout << "UserID: " << listR.idUser << endl;
+                cout << "ID:" << listR.idList << endl
+                     << "Nombre: " << listR.nameList << endl;
                 for (int i = 0; i < indxContent; i++)
                 {
-                    cout << "#" << i + 1 << ": " << x.content[i] << endl;
+                    cout << "#" << i + 1 << ": " << listR.content[i] << endl;
                 }
                 cout << "------------------------------------" << endl;
             }
@@ -226,14 +227,14 @@ void ListaRepro::buscar()
                 {
                     ifstream a(".data\\ListDatabase.txt");
                     a.seekg(y.pos, ios::beg);
-                    a.read((char *)&x, sizeof(x));
+                    a.read((char *)&listR, sizeof(listR));
                     cout << "  Lista de Reproduccion encontrada" << endl
                          << "------------------------------------" << endl;
-                    cout << "ID:" << x.idList << endl
-                         << "Nombre: " << x.nameList << endl;
+                    cout << "ID:" << listR.idList << endl
+                         << "Nombre: " << listR.nameList << endl;
                     for (int i = 0; i < indxContent; i++)
                     {
-                        cout << "#" << i + 1 << ": " << x.content[i] << endl;
+                        cout << "#" << i + 1 << ": " << listR.content[i] << endl;
                     }
                     cout << "------------------------------------" << endl;
                     a.close();
@@ -272,7 +273,7 @@ void ListaRepro::Modificar()
         while (!indice.eof())
         {
             indice.read((char *)&y, sizeof(y));
-            datos.read((char *)&x, sizeof(x));
+            datos.read((char *)&listR, sizeof(listR));
             if (indice.eof())
             {
                 break;
@@ -283,11 +284,11 @@ void ListaRepro::Modificar()
                 {
                     cout << " Lista de Reproduccion a Modificar" << endl
                          << "------------------------------------" << endl;
-                    cout << "ID:" << x.idList << endl
-                         << "Nombre: " << x.nameList << endl;
+                    cout << "ID:" << listR.idList << endl
+                         << "Nombre: " << listR.nameList << endl;
                     for (int i = 0; i < indxContent; i++)
                     {
-                        cout << "#" << i + 1 << ": " << x.content[i] << endl;
+                        cout << "#" << i + 1 << ": " << listR.content[i] << endl;
                     }
                     cout << "Deseas modificarlo\n"
                          << "1.-Si   2.-No" << endl
@@ -311,7 +312,7 @@ void ListaRepro::Modificar()
                             char _nameList[35];
                             cout << "Dame el nuevo Nombre de la Lista de Reroduccion" << endl;
                             cin.getline(_nameList, 35);
-                            x.setList(x.idUser, x.idList, _nameList);
+                            listR.setList(listR.idUser, listR.idList, _nameList);
                         }
                         else if (mod == 2)
                         {
@@ -354,7 +355,7 @@ void ListaRepro::Modificar()
                                         char temp[10];
                                         for (int i = 0; i < indxContent; i++)
                                         {
-                                            cout << "pos[" << i << "] = " << x.content[i] << endl;
+                                            cout << "pos[" << i << "] = " << listR.content[i] << endl;
                                         }
                                         cout << "------------------------------------" << endl;
                                         cout << "Que posicion desea modificar: ";
@@ -377,7 +378,7 @@ void ListaRepro::Modificar()
                                         int line;
                                         for (int i = 0; i < indxContent; i++)
                                         {
-                                            cout << "pos[" << i << "] = " << x.content[i] << endl;
+                                            cout << "pos[" << i << "] = " << listR.content[i] << endl;
                                         }
                                         cout << "------------------------------------" << endl;
                                         cout << "Que posicion desea Eliminar: ";
@@ -400,7 +401,7 @@ void ListaRepro::Modificar()
                     }
                 }
             }
-            c.write((char *)&x, sizeof(x));
+            c.write((char *)&listR, sizeof(listR));
             strcpy(y.idList, idList);
             d.write((char *)&y, sizeof(y));
         } // while archivo
@@ -454,16 +455,16 @@ void ListaRepro::Eliminar()
                 {
                     ifstream a(".data\\ListDatabase.txt");
                     a.seekg(y.pos, ios::beg);
-                    a.read((char *)&x, sizeof(x));
+                    a.read((char *)&listR, sizeof(listR));
                     if (a.eof())
                         break;
                     cout << "  Lista de Reproduccion a Eliminar  " << endl
                          << "------------------------------------" << endl;
-                    cout << "ID:" << x.idList << endl
-                         << "Nombre: " << x.nameList << endl;
+                    cout << "ID:" << listR.idList << endl
+                         << "Nombre: " << listR.nameList << endl;
                     for (int i = 0; i < indxContent; i++)
                     {
-                        cout << "#" << i + 1 << ": " << x.content[i] << endl;
+                        cout << "#" << i + 1 << ": " << listR.content[i] << endl;
                     }
                     cout << "Deseas eliminarla" << endl
                          << "1.-Si   2.-No" << endl
@@ -484,7 +485,7 @@ void ListaRepro::Eliminar()
             while (!indice.eof())
             {
                 indice.read((char *)&y, sizeof(y));
-                datos.read((char *)&x, sizeof(x));
+                datos.read((char *)&listR, sizeof(listR));
                 if (indice.eof())
                 {
                     break;
@@ -495,11 +496,11 @@ void ListaRepro::Eliminar()
                     {
                         cont2++;
                         ofstream c(".data\\temp.txt", ios::app);
-                        c.write((char *)&x, sizeof(x));
+                        c.write((char *)&listR, sizeof(listR));
                         strcpy(y.idList, idList);
                         if (tempPos < y.pos)
                         {
-                            y.pos = y.pos - sizeof(x);
+                            y.pos = y.pos - sizeof(listR);
                         }
                         ofstream d(".data\\tempind.txt", ios::app);
                         d.write((char *)&y, sizeof(y));
@@ -552,7 +553,7 @@ void ListaRepro::Mostrar_Indice()
     a.close();
 }
 
-void menuL(char _id[15], bool _ad)
+void ListaRepro::menuL(char _id[15], bool _ad)
 {
     cout << _id << endl;
     userlog.submit(_id, _ad);
@@ -577,25 +578,25 @@ void menuL(char _id[15], bool _ad)
         switch (opc)
         {
         case 1:
-            x.capturar(userlog.id);
+            listR.capturar(userlog.id);
             break;
         case 2:
-            x.buscar();
+            listR.buscar();
             break;
         case 3:
-            x.mostrar();
+            listR.mostrar();
             break;
         case 4:
-            x.Modificar();
+            listR.Modificar();
             break;
         case 5:
-            x.Eliminar();
+            listR.Eliminar();
             break;
         case 6:
-            x.Mostrar_Indice();
+            listR.Mostrar_Indice();
             break;
         }
-        x.ChangeCont();
+        listR.ChangeCont();
         if(opc != 7)
             system("Pause");
     } while (opc != 7);

@@ -3,7 +3,7 @@
 using namespace std;
 
 void Recovery(){
-    x.Recovery();
+    listR.Recovery();
 }
 
 int main(){
@@ -20,9 +20,9 @@ int main(){
         int opc;
         cin>>opc;cin.ignore();
         if(opc==1){
-            LogIn();
+            OrdCom.LogIn();
         }else if(opc==2){
-            SignUp();
+            OrdCom.Agregar();
         }else if(opc>3){
             cout<<"OPCION INVALIDA"<<endl;
         }else if(opc==3){
