@@ -6,7 +6,7 @@
 #include "Peliculas.cpp"
 #include "Series.cpp"
 #include "ListasRep.cpp"
-
+int cl = 10;
 using namespace std;
 bool typeLog;
 void menuUser();
@@ -44,6 +44,7 @@ public:
     void setters(char *_id, char *_user, char *_password);
     void setUser(char *_user);
     void setPass(char *_password);
+    void setID(char *_id);
     string getUser();
     bool checkUser(char *user);
     bool checkID(char *_id);
@@ -56,8 +57,27 @@ public:
     void LogIn();
     void menuAdmin();
     void menuUser();
+    char *cifrar(char *, int);
+    char *descifrar(char *, int);
 } OrdCom;
+char *Users::cifrar(char *t, int clave)
+{
+    int size = strlen(t);
+    // cout<<"SIZE: " <<size <<endl
+    //<< "Sin: "<< t << endl;
+    for (int i = 0; i < size; i++)
+    {
+        t[i] += clave;
+    }
+    // cout<<"Con: "<< t;
+    // system("pause");
 
+    return t;
+}
+char *Users::descifrar(char *t, int clave)
+{
+    return cifrar(t, -clave);
+}
 void Users::setters(char *_id, char *_user, char *_password)
 {
     strcpy(this->id, _id);
@@ -71,6 +91,12 @@ void Users::setUser(char *_user)
 void Users::setPass(char *_password)
 {
     strcpy(this->password, _password);
+}
+void Users::setID(char *_id)
+{
+    //cout << _id <<endl;
+    strcpy(this->id, _id);
+    //cout << this->id <<endl;
 }
 string Users::getUser()
 {
@@ -92,6 +118,7 @@ bool Users::checkUser(char *user)
         while (!archivo.eof())
         {
             archivo.read((char *)&OrdCom, sizeof(OrdCom));
+            descifrar(userName, cl);
             buffer2 = userName;
             if (archivo.eof())
             {
@@ -123,6 +150,7 @@ bool Users::checkID(char *_id)
         while (!archivo.eof())
         {
             archivo.read((char *)&OrdCom, sizeof(OrdCom));
+            descifrar(id, cl);
             buffer2 = id;
             if (archivo.eof())
             {
@@ -155,6 +183,7 @@ void Users::Agregar()
             cout << "ID repetido intente con otro..." << endl;
         }
     } while (verifyA);
+    cifrar(buffer, cl);
     do
     {
         cout << "Username: ";
@@ -165,8 +194,10 @@ void Users::Agregar()
             cout << "Username repetido intente con otro..." << endl;
         }
     } while (verifyB);
+    cifrar(buffer1, cl);
     cout << "Password: ";
     cin.getline(buffer2, 35);
+    cifrar(buffer2, cl);
     setters(buffer, buffer1, buffer2);
     OrdCom.admin = false;
     ofstream archivo;
@@ -193,8 +224,11 @@ void Users::Mostrar()
             {
                 break;
             }
+            descifrar(id, cl);
             cout << "ID: " << id << endl;
+            descifrar(userName, cl);
             cout << "Usuario: " << userName << endl;
+            descifrar(password, cl);
             cout << "Password: " << password << endl;
             cout << "" << endl;
         }
@@ -225,13 +259,15 @@ void Users::Modificar()
         while (!archivo.eof())
         {
             archivo.read((char *)&OrdCom, sizeof(OrdCom));
+            setID(descifrar(id, cl));
+            setUser(descifrar(userName, cl));
+            setPass(descifrar(password, cl));
             if (archivo.eof())
             {
                 break;
             }
             if (strcmp(id, valor) == 0)
             {
-                strcpy(OrdCom.id, valor);
                 char buffer[35];
                 cout << "Usuario: " << userName << endl;
                 if (!typeLog)
@@ -246,6 +282,8 @@ void Users::Modificar()
                 if (strcmp(buffer, password) == 0)
                 {
                     int opc = 0;
+                    bool modic = false;
+                    bool modic1 = false;
                     while (opc != 3)
                     {
                         cout << "Que desea modificar" << endl
@@ -270,7 +308,9 @@ void Users::Modificar()
                                     cout << "Username repetido intente con otro..." << endl;
                                 }
                             } while (verify);
-                            setUser(aux);
+                            setUser(cifrar(aux, cl));
+                            modic = true;
+                            modic1 = true;
                         }
                         break;
                         case 2:
@@ -294,12 +334,26 @@ void Users::Modificar()
                                 }
                             } while (!verify);
 
-                            setPass(aux);
+                            setPass(cifrar(aux, cl));
+                            modic = true;
                         }
                         break;
+                        case 3:
+                            if (modic == false)
+                            {
+                                setUser(cifrar(userName, cl));
+                                setPass(cifrar(password, cl));
+                            }
+                            break;
                         default:
+
                             break;
                         }
+                    }
+                    //cout << "Valor: " << valor << endl;
+                    setID(cifrar(valor, cl));
+                    if(modic1 == false){
+                        setUser(cifrar(userName,cl));
                     }
                 }
                 else
@@ -309,11 +363,15 @@ void Users::Modificar()
                     remove(".data\\Utemporal.txt");
                     return;
                 }
+                cout<<"Debug: "<< userName << " / "<< password <<endl;
                 ofstream archivo(".data\\users.txt", ios::app);
                 archivo2.write((char *)&OrdCom, sizeof(OrdCom));
             }
             else
             {
+                setID(cifrar(id, cl));
+                setUser(cifrar(userName, cl));
+                setPass(cifrar(password, cl));
                 archivo2.write((char *)&OrdCom, sizeof(OrdCom));
             }
         }
@@ -341,6 +399,7 @@ void Users::Eliminar()
         while (!archivo.eof())
         {
             archivo.read((char *)&OrdCom, sizeof(OrdCom));
+            descifrar(id, cl);
             if (archivo.eof())
             {
                 break;
@@ -349,7 +408,9 @@ void Users::Eliminar()
             {
                 cout << "\tUsuario Encontrada" << endl;
                 cout << "ID: " << id << endl;
+                descifrar(userName, cl);
                 cout << "Fecha: " << userName << endl;
+                descifrar(password, cl);
                 cout << "Password: " << password << endl;
                 cout << "DESEAS ELIMINAR?\n1.- SI\n0.- NO\n>: ";
                 cin >> opcion;
@@ -359,11 +420,15 @@ void Users::Eliminar()
                 }
                 else
                 {
+                    cifrar(id, cl);
+                    cifrar(userName, cl);
+                    cifrar(password, cl);
                     archivo2.write((char *)&OrdCom, sizeof(OrdCom));
                 }
             }
             else
             {
+                cifrar(id, cl);
                 archivo2.write((char *)&OrdCom, sizeof(OrdCom));
             }
         }
@@ -392,6 +457,7 @@ void Users::Buscar()
         while (!archivo.eof())
         {
             archivo.read((char *)&OrdCom, sizeof(OrdCom));
+            descifrar(id, cl);
             if (archivo.eof())
             {
 
@@ -402,7 +468,9 @@ void Users::Buscar()
                 find = true;
                 cout << "\tUsuario Encontrada" << endl;
                 cout << "ID: " << id << endl;
+                descifrar(userName, cl);
                 cout << "Fecha: " << userName << endl;
+                descifrar(password, cl);
                 cout << "Password: " << password << endl;
             }
         }
@@ -430,6 +498,8 @@ bool Users::checkLog()
         while (!archivo.eof())
         {
             archivo.read((char *)&OrdCom, sizeof(OrdCom));
+            descifrar(id, cl);
+            descifrar(userName, cl);
             if (archivo.eof())
 
                 break;
@@ -439,6 +509,7 @@ bool Users::checkLog()
                 char buffer[35];
                 cout << "Password: ";
                 cin.getline(buffer, 35);
+                descifrar(password, cl);
                 if (strcmp(password, buffer))
                 {
                     cout << "INVALID PASSWORD" << endl;
@@ -559,8 +630,8 @@ void Users::menuAdmin()
             break;
         case 8:
             system("cls");
-            cout<<userLog.id<<endl;
-            listR.menuL(userLog.id,true);
+            cout << userLog.id << endl;
+            listR.menuL(userLog.id, true);
             system("pause");
             break;
         }
@@ -597,8 +668,8 @@ void Users::menuUser()
             break;
         case 3:
             system("cls");
-            listR.menuL(userLog.id,false);
-            //cout << "ESTAMOS TRABAJANDO EN ELLO <3" << endl;
+            listR.menuL(userLog.id, false);
+            // cout << "ESTAMOS TRABAJANDO EN ELLO <3" << endl;
             system("pause");
             break;
         case 4:
