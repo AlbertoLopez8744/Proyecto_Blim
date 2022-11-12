@@ -15,11 +15,10 @@ public:
     void Modificar();
     void Eliminar();
     void Buscar();
-    void menu();
     void setters(char *, char *, char *, char *, char *, char *);
     void adminSeries();
-    void userSeries();
-} serie;
+   // void userSeries(char _id[15]);
+}serie;
 
 int opc = 0;
 
@@ -287,6 +286,7 @@ void Series::Buscar()
     }
     archivo.close();
 }
+
 void Series::adminSeries()
 {
     cout << "\n\n\t\tMENU SERIES ADMIN\n\n";
@@ -324,17 +324,18 @@ void Series::adminSeries()
     return;
 }
 
-void Series::userSeries()
+/*
+void Series::userSeries(char _id[15])
 {
-    cout << "\n\n\t\tMENU SERIES \n\n";
     do
     {
-        cout << "\n\tSELECCIONE LA OPCION DESEADA"<< endl
-        << "[1] CATALOGO" << endl
-        << "[2] BUSCAR" << endl
-        << "[3] VER" << endl
-        << "[4] SALIR" << endl
-        << "-> ";
+    cout << "\n\n\t\tMENU SERIES \n\n";
+        cout << "\n\tSELECCIONE LA OPCION DESEADA" << endl
+             << "[1] CATALOGO" << endl
+             << "[2] BUSCAR" << endl
+             << "[3] VER" << endl
+             << "[4] SALIR" << endl
+             << "-> ";
         cin >> opc;
         cin.ignore();
         switch (opc)
@@ -346,7 +347,7 @@ void Series::userSeries()
             serie.Buscar();
             break;
         case 3:
-            cout<<"We have work in it <3"<<endl;
+            serie.ver(_id);
             break;
         default:
             cout << "OPCION INCORRECTA...." << endl;
@@ -356,3 +357,4 @@ void Series::userSeries()
     } while (opc != 4);
     return;
 }
+*/

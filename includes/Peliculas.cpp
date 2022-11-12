@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string.h>
+
 using namespace std;
 class Movie
 {
@@ -15,8 +16,7 @@ public:
     void Modificar();
     void setters(char *, char *, char *, char *, char *);
     void adminMovies();
-    void userMovies();
-} movies;
+}movies;
 void Movie::setters(char *_codigo, char *_nombre, char *_descripcion, char *_time, char *_publicObj)
 {
     strcpy(this->codigo, _codigo);
@@ -133,6 +133,7 @@ void Movie::Buscar()
     }
     arc.close();
 }
+
 void Movie::Eliminar()
 {
     int i;
@@ -305,38 +306,4 @@ void Movie::adminMovies()
     } while (op != 6);
     return;
 }
-void Movie::userMovies()
-{
-    int op;
-    do
-    {
-        cout << endl
-             << "MENU PELICULAS" << endl
-             << "[1] CATALOGO" << endl
-             << "[2] BUSCAR" << endl
-             << "[3] VER" << endl
-             << "[4] SALIR" << endl
-             << "-> ";
-        cin >> op;
-        cin.ignore();
-        switch (op)
-        {
-        case 1:
-            movies.Imprimir();
-            system("pause");
-            system("cls");
-            break;
-        case 2:
-            movies.Buscar();
-            system("pause");
-            system("cls");
-            break;
-        case 3:
-            cout << "Estamos trabajando en ello <3" << endl;
-            system("pause");
-            system("cls");
-            break;
-        }
-    } while (op != 4);
-    return;
-}
+

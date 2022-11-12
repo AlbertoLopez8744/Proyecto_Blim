@@ -6,6 +6,7 @@
 #include "Peliculas.cpp"
 #include "Series.cpp"
 #include "ListasRep.cpp"
+#include "HistorialUsuario.cpp"
 int cl = 10;
 using namespace std;
 bool typeLog;
@@ -55,6 +56,9 @@ public:
     void Eliminar();
     bool checkLog();
     void LogIn();
+    void ver(bool tipo);
+    void userMovies();
+    void userSeries();
     void menuAdmin();
     void menuUser();
     char *cifrar(char *, int);
@@ -343,6 +347,7 @@ void Users::Modificar()
                             {
                                 setUser(cifrar(userName, cl));
                                 setPass(cifrar(password, cl));
+                                modic1=true;
                             }
                             break;
                         default:
@@ -634,6 +639,9 @@ void Users::menuAdmin()
             listR.menuL(userLog.id, true);
             system("pause");
             break;
+        case 9:
+            system("cls");
+            historial.hAdmin();
         }
     } while (op != 12);
     return;
@@ -660,11 +668,11 @@ void Users::menuUser()
         {
         case 1:
             system("cls");
-            movies.userMovies();
+            OrdCom.userMovies();
             break;
         case 2:
             system("cls");
-            serie.userSeries();
+            OrdCom.userSeries();
             break;
         case 3:
             system("cls");
@@ -674,7 +682,7 @@ void Users::menuUser()
             break;
         case 4:
             system("cls");
-            cout << "ESTAMOS TRABAJANDO EN ELLO <3" << endl;
+            historial.getHistorial(userLog.id);
             system("pause");
             break;
         case 5:
@@ -690,4 +698,111 @@ void Users::menuUser()
         }
     } while (op != 7);
     return;
+}
+
+void Users::userMovies()
+{
+    int op;
+    do
+    {
+        cout << endl
+             << "MENU PELICULAS" << endl
+             << "[1] CATALOGO" << endl
+             << "[2] BUSCAR" << endl
+             << "[3] VER" << endl
+             << "[4] SALIR" << endl
+             << "-> ";
+        cin >> op;
+        cin.ignore();
+        switch (op)
+        {
+        case 1:
+            movies.Imprimir();
+            system("pause");
+            system("cls");
+            break;
+        case 2:
+            movies.Buscar();
+            system("pause");
+            system("cls");
+            break;
+        case 3:
+            OrdCom.ver(true);
+            system("pause");
+            system("cls");
+            break;
+        }
+    } while (op != 4);
+    return;
+}
+
+void Users::userSeries(){
+     do
+    {
+        cout << "\n\n\t\tMENU SERIES \n\n";
+        cout << "\n\tSELECCIONE LA OPCION DESEADA" << endl
+             << "[1] CATALOGO" << endl
+             << "[2] BUSCAR" << endl
+             << "[3] VER" << endl
+             << "[4] SALIR" << endl
+             << "-> ";
+        cin >> opc;
+        cin.ignore();
+        switch (opc)
+        {
+        case 1:
+            serie.Mostrar();
+            break;
+        case 2:
+            serie.Buscar();
+            break;
+        case 3:
+            OrdCom.ver(false);
+            break;
+        default:
+            cout << "OPCION INCORRECTA...." << endl;
+        }
+        system("Pause");
+        system("cls");
+    } while (opc != 4);
+    return;
+}
+
+void Users::ver(bool tipo)
+{
+    int opc;
+    char _tipo;
+    cout << "Que deseas hacer?" << endl
+         << "1 Ingresar ID a ver" << endl
+         << "2 Mostrar catalogo" << endl
+         << "3 Salir" << endl
+         << "-> ";
+    cin >> opc;cin.ignore();
+    if(opc == 3){
+        return;
+    }
+    char watch[10];
+    if(opc == 2){
+        if(tipo){
+            movies.Imprimir();
+        }else{
+            serie.Mostrar();
+        }
+    }
+    cout<< "Ingresa ID: ";
+    cin.getline(watch, 10);
+    if(tipo){
+        if(movies.checkID(watch)==false){
+            cout<<"El ID no existe" << endl;
+            return;
+        }
+        _tipo = 'M';
+    }else{
+        if(serie.checkID(watch)==false){
+            cout<<"El ID no existe" << endl;
+            return;
+        }
+        _tipo = 'S';
+    }
+    historial.setContent(userLog.id, watch, _tipo);
 }
