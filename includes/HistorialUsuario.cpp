@@ -24,7 +24,7 @@ public:
     void buscar();
     void Modificar();
     void Eliminar();
-    void hAdmin();
+    int hAdmin();
     void hUser(char _id[15], bool _ad);
 } historial;
 
@@ -54,10 +54,10 @@ void Historial::setContent(char _id[15], char _content[10], char _tipo)
             if (strcmp(historial.userID, _id) == 0 && !band)
             {
                 band = true;
-                cout << "Historial" << historial.userID << endl;
+                cout << "HISTORIAL" << historial.userID << endl;
                 if (indxContent == 50)
                 {
-                    cout << "No se pueden ingresar mas ID's" << endl;
+                    cout << "NO SE PUEDEN INGRESAR MAS ID's" << endl;
                 }
                 else
                 {
@@ -78,14 +78,14 @@ void Historial::setContent(char _id[15], char _content[10], char _tipo)
             c.close();
             remove(".data\\datos.bin");
             rename(".data\\temp.bin", ".data\\datos.bin");
-            cout << "Debug entro al if por no haber registro previo" << endl;
+            //cout << "Debug entro al if por no haber registro previo" << endl;
             historial.setList(_id);
             indxContent = 0;
-            cout << historial.userID << endl;
+            //cout << historial.userID << endl;
             ofstream b(".data\\datos.bin", ios::binary | ios::app);
             b.write((char *)&historial, sizeof(historial));
             b.close();
-            historial.mostrar();
+            //historial.mostrar();
             historial.setContent(_id, _content, _tipo);
             return;
         }
@@ -103,7 +103,7 @@ void Historial::capturar()
     indxContent = 0;
     char _userID[15];
 
-    cout << "    AGREGAR LISTA DE REPRODUCCION" << endl;
+    cout << "    AGREGAR HISTORIAL" << endl;
     cout << "------------------------------------" << endl;
     cout << "Id del usuario:" << endl;
     cin.getline(_userID, 14);
@@ -124,7 +124,7 @@ void Historial::mostrar()
         cout << "No existe el archivo" << endl;
     else
     {
-        cout << "LISTAS DE REPRODUCCION EXISTENTES" << endl
+        cout << "HISTORIALES EXISTENTES" << endl
              << "----------------------------------" << endl;
         while (!a.eof())
         {
@@ -162,9 +162,8 @@ void Historial::getHistorial(char _id[15])
             }
             if (strcmp(historial.userID, _id) == 0)
             {
-                cout << "  Lista de Reproduccion encontrada" << endl
+                cout << "  HISTORIAL DEL ID #"<< historial.userID << endl
                      << "------------------------------------" << endl;
-                cout << "ID:" << historial.userID << endl;
                 cout << "N : Tipo / ID" << endl;
                 for (int i = 0; i < indxContent; i++)
                 {
@@ -190,13 +189,13 @@ void Historial::buscar()
     ifstream a(".data\\datos.bin");
     if (!a.good())
     {
-        cout << "No existe el archivo" << endl;
+        cout << "NO EXISTE EL ARCHIVO" << endl;
     }
     else
     {
         cout << "\tBUSCAR" << endl
              << "----------------------------------" << endl;
-        cout << "\nID de Lista de Reproduccion a buscar!" << endl;
+        cout << "\nID DE HISTORIAL (*ES EL MISMO DEL USUARIO*)" << endl;
         cin.getline(userIDbus, 14);
         while (!a.eof())
         {
@@ -207,9 +206,9 @@ void Historial::buscar()
             }
             if (strcmp(historial.userID, userIDbus) == 0)
             {
-                cout << "  Lista de Reproduccion encontrada" << endl
+                cout << "  HISTORIAL DEL ID #" << historial.userID << " ENCONTRADO" << endl
                      << "------------------------------------" << endl;
-                cout << "ID:" << historial.userID << endl;
+                cout << "N : Tipo / ID" << endl;
                 for (int i = 0; i < indxContent; i++)
                 {
                     cout << "#" << i + 1 << ": " << historial.content[i] << endl;
@@ -236,13 +235,13 @@ void Historial::Modificar()
     ofstream c(".data\\temp.bin", ios::binary);
     if (!datos.good())
     {
-        cout << "No existe el archivo";
+        cout << "NO EXISTE EL ARCHIVO";
     }
     else
     {
         cout << "             MODIFICAR" << endl
              << "----------------------------------" << endl;
-        cout << "\nID de Lista de Reproduccion a modificar!" << endl;
+        cout << "\nID DE HISTORIAL A MODIFICAR" << endl;
         cin.getline(userIDmod, 14);
         while (!datos.eof())
         {
@@ -253,16 +252,16 @@ void Historial::Modificar()
             }
             if (strcmp(historial.userID, userIDmod) == 0 && band == 0)
             {
-                cout << " Lista de Reproduccion a Modificar" << endl
+                cout << " HISTORIAL ENCONTRADO" << endl
                      << "------------------------------------" << endl;
                 cout << "ID:" << historial.userID << endl;
                 for (int i = 0; i < indxContent; i++)
                 {
                     cout << "#" << i + 1 << ": " << historial.content[i] << endl;
                 }
-                cout << "Deseas modificarlo\n"
-                     << "1.-Si   2.-No" << endl
-                     << "Digite la opcion->";
+                cout << "DESEAS MODIFICARLO?\n"
+                     << "1.-SI   2.-NO" << endl
+                     << "DIGITE LA OPCION->";
                 cin >> opc;
                 cout << "------------------------------------" << endl;
                 cin.ignore();
@@ -273,8 +272,8 @@ void Historial::Modificar()
                     do
                     {
                         cout << "------------------------------------" << endl;
-                        cout << "Que Deseas hacer :" << endl
-                             << "1.- Insertar   2.- Modificar 3.- Eliminar 4.-Salir" << endl
+                        cout << "QUE DESEAS HACER :" << endl
+                             << "1.- INSERTAR   2.- MODIFICAR 3.- ELIMINAR 4.-SALIR" << endl
                              << "Digite la opcion-> ";
                         cin >> mod;
                         cout << "------------------------------------" << endl;
@@ -286,11 +285,11 @@ void Historial::Modificar()
                             char temp[10];
                             if (indxContent == 50)
                             {
-                                cout << "No se pueden ingresar mas ID's" << endl;
+                                cout << "NO SE PUEDEN INGRESAR MAS ID's" << endl;
                             }
                             else
                             {
-                                cout << "Cual es el Nuevo ID: ";
+                                cout << "CUAL ES EL NUEVO ID: ";
                                 cin.getline(temp, 10);
                                 strcpy(content[indxContent], temp);
                                 indxContent++;
@@ -309,13 +308,13 @@ void Historial::Modificar()
                                 char temp[10];
                                 for (int i = 0; i < indxContent; i++)
                                 {
-                                    cout << "pos[" << i << "] = " << historial.content[i] << endl;
+                                    cout << "POS[" << i << "] = " << historial.content[i] << endl;
                                 }
                                 cout << "------------------------------------" << endl;
-                                cout << "Que posicion desea modificar: ";
+                                cout << "QUE POSICION DESEA MODIFICAR: ";
                                 cin >> line;
                                 cin.ignore();
-                                cout << "ID nueva: ";
+                                cout << "ID NUEVA: ";
                                 cin.getline(temp, 10);
                                 strcpy(content[line], temp);
                             }
@@ -332,10 +331,10 @@ void Historial::Modificar()
                                 int line;
                                 for (int i = 0; i < indxContent; i++)
                                 {
-                                    cout << "pos[" << i << "] = " << historial.content[i] << endl;
+                                    cout << "POS[" << i << "] = " << historial.content[i] << endl;
                                 }
                                 cout << "------------------------------------" << endl;
-                                cout << "Que posicion desea Eliminar: ";
+                                cout << "QUE POSICION DESEA ELIMINAR: ";
                                 cin >> line;
                                 cin.ignore();
                                 if (indxContent < 10)
@@ -439,13 +438,13 @@ void Historial::Eliminar()
     cout << "*********************************" << endl;
 }
 
-void Historial::hAdmin()
+int Historial::hAdmin()
 {
     int opc;
     do
     {
         system("cls");
-        cout << "   Menu de Lista de Reproduccion    " << endl
+        cout << "   MENU DEL HISTORIAL    " << endl
              << "------------------------------------" << endl;
         cout << "Selecciona una de la siguientes opciones:" << endl
              << "1.- Agregar" << endl
@@ -467,7 +466,7 @@ void Historial::hAdmin()
             historial.buscar();
             break;
         case 3:
-            historial.mostrar();
+            return 3;
             break;
         case 4:
             historial.Modificar();
@@ -479,6 +478,7 @@ void Historial::hAdmin()
         _sleep(600);
         system("Pause");
     } while (opc != 6);
+    return 0;
 }
 
 void Historial::hUser(char _id[15], bool _ad)
@@ -486,19 +486,3 @@ void Historial::hUser(char _id[15], bool _ad)
     getHistorial(_id);
     system("Pause");
 }
-
-/*
-char temp[10];
-    if (indxContent == 50)
-    {
-        cout << "No se pueden ingresar mas ID's" << endl;
-    }
-    else
-    {
-        cout << "Cual es el Nuevo ID: ";
-        cin.getline(temp, 10);
-        strcpy(content[indxContent], temp);
-        indxContent++;
-    }
-
-*/

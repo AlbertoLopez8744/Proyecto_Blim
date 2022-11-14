@@ -1,1 +1,0 @@
-b.read((char *)&x, sizeof(x));

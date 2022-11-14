@@ -15,6 +15,7 @@ public:
     void Modificar();
     void Eliminar();
     void Buscar();
+    string getSerie(char _id[10]);
     void setters(char *, char *, char *, char *, char *, char *);
     void adminSeries();
    // void userSeries(char _id[15]);
@@ -42,10 +43,7 @@ bool Series::checkID(char *_codigo)
             if (arc.eof())
                 break;
             if (buffer1 == buffer2)
-            {
-                cout << "Se encontraron coincidencias por favor intente con otro codigo" << endl;
                 band = true;
-            }
         }
     }
     arc.close();
@@ -69,6 +67,8 @@ void Series::Agregar()
         cout << "ESCRIBE EL CODIGO DE LA SERIE: ";
         cin.getline(_codigo, 10);
         verified = checkID(_codigo);
+        if(verified)
+            cout << "Se encontraron coincidencias por favor intente con otro codigo" << endl;
     } while (verified);
     cout << "ESCRIBE EL NOMBRE DE LA SERIE: ";
     cin.getline(_nombre, 100);
@@ -287,6 +287,33 @@ void Series::Buscar()
     archivo.close();
 }
 
+string Series::getSerie(char _id[10])
+{
+    string N;
+    bool band = false;
+    ifstream archivo(".data\\Series.txt");
+    if (!archivo.good())
+    {
+        cout << "\nEl archivo no existe...";
+    }
+    else
+    {
+        while (!archivo.eof() && !band)
+        {
+            archivo.read((char *)&serie, sizeof(serie)); // dim1 contiene el tama o de la cadena que se quiere leer
+            if (archivo.eof())
+                break;
+            if (strcmpi(_id, codigo) == 0)
+            {
+                N = serie.nombre;
+                band = true;
+            }
+        }
+    }
+    archivo.close();
+    return N;
+}
+
 void Series::adminSeries()
 {
     cout << "\n\n\t\tMENU SERIES ADMIN\n\n";
@@ -324,37 +351,3 @@ void Series::adminSeries()
     return;
 }
 
-/*
-void Series::userSeries(char _id[15])
-{
-    do
-    {
-    cout << "\n\n\t\tMENU SERIES \n\n";
-        cout << "\n\tSELECCIONE LA OPCION DESEADA" << endl
-             << "[1] CATALOGO" << endl
-             << "[2] BUSCAR" << endl
-             << "[3] VER" << endl
-             << "[4] SALIR" << endl
-             << "-> ";
-        cin >> opc;
-        cin.ignore();
-        switch (opc)
-        {
-        case 1:
-            serie.Mostrar();
-            break;
-        case 2:
-            serie.Buscar();
-            break;
-        case 3:
-            serie.ver(_id);
-            break;
-        default:
-            cout << "OPCION INCORRECTA...." << endl;
-        }
-        system("Pause");
-        system("cls");
-    } while (opc != 4);
-    return;
-}
-*/

@@ -3,6 +3,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <string.h>
+#include "Pagos.cpp"
 #include "Peliculas.cpp"
 #include "Series.cpp"
 #include "ListasRep.cpp"
@@ -59,8 +60,11 @@ public:
     void ver(bool tipo);
     void userMovies();
     void userSeries();
+    void userPagos();
     void menuAdmin();
     void menuUser();
+    void getHistorial(char _id[15]);
+    void showHistorial();
     char *cifrar(char *, int);
     char *descifrar(char *, int);
 } OrdCom;
@@ -98,9 +102,9 @@ void Users::setPass(char *_password)
 }
 void Users::setID(char *_id)
 {
-    //cout << _id <<endl;
+    // cout << _id <<endl;
     strcpy(this->id, _id);
-    //cout << this->id <<endl;
+    // cout << this->id <<endl;
 }
 string Users::getUser()
 {
@@ -347,7 +351,7 @@ void Users::Modificar()
                             {
                                 setUser(cifrar(userName, cl));
                                 setPass(cifrar(password, cl));
-                                modic1=true;
+                                modic1 = true;
                             }
                             break;
                         default:
@@ -355,10 +359,11 @@ void Users::Modificar()
                             break;
                         }
                     }
-                    //cout << "Valor: " << valor << endl;
+                    // cout << "Valor: " << valor << endl;
                     setID(cifrar(valor, cl));
-                    if(modic1 == false){
-                        setUser(cifrar(userName,cl));
+                    if (modic1 == false)
+                    {
+                        setUser(cifrar(userName, cl));
                     }
                 }
                 else
@@ -368,7 +373,7 @@ void Users::Modificar()
                     remove(".data\\Utemporal.txt");
                     return;
                 }
-                cout<<"Debug: "<< userName << " / "<< password <<endl;
+                cout << "Debug: " << userName << " / " << password << endl;
                 ofstream archivo(".data\\users.txt", ios::app);
                 archivo2.write((char *)&OrdCom, sizeof(OrdCom));
             }
@@ -576,6 +581,7 @@ void Users::LogIn()
 }
 void Users::menuAdmin()
 {
+    Pago adminPay;
     int op;
     do
     {
@@ -591,8 +597,7 @@ void Users::menuAdmin()
         cout << "8.-Listas de reproduccion" << endl;
         cout << "9.-Historiales de usuario" << endl;
         cout << "10.-Pagos" << endl;
-        cout << "11.-Facturas" << endl;
-        cout << "12.-Cerrar Sesion " << endl;
+        cout << "11.-Cerrar Sesion " << endl;
         cout << "Ingresa la opcion->";
         cin >> op;
         cin.ignore();
@@ -640,15 +645,33 @@ void Users::menuAdmin()
             system("pause");
             break;
         case 9:
+        {
+            int h;
             system("cls");
-            historial.hAdmin();
+            do
+            {    
+                h = historial.hAdmin();
+                if (h == 3)
+                {
+                    OrdCom.showHistorial();
+                    system("pause");
+                }
+            } while (h);
+            
         }
-    } while (op != 12);
+        break;
+        case 10:
+            system("cls");
+            adminPay.AdminPay();
+            break;
+        }
+    } while (op != 11);
     return;
 }
 
 void Users::menuUser()
 {
+    Pago userPay;
     int op;
     do
     {
@@ -659,8 +682,9 @@ void Users::menuUser()
         cout << "3.-Listas de Reproduccion " << endl;
         cout << "4.-Historial" << endl;
         cout << "5.-Buscar " << endl;
-        cout << "6.-Configuracion cuenta" << endl;
-        cout << "7.-Cerrar Sesion " << endl;
+        cout << "6.-Pago" << endl;
+        cout << "7.-Configuracion cuenta" << endl;
+        cout << "8.-Cerrar Sesion " << endl;
         cout << "Ingresa la opcion->";
         cin >> op;
         cin.ignore();
@@ -682,7 +706,7 @@ void Users::menuUser()
             break;
         case 4:
             system("cls");
-            historial.getHistorial(userLog.id);
+            OrdCom.getHistorial(userLog.id);
             system("pause");
             break;
         case 5:
@@ -695,8 +719,12 @@ void Users::menuUser()
             OrdCom.Modificar();
             system("pause");
             break;
+        case 7:
+            system("cls");
+            userPay.AdminPay();
+            system("Pause");
         }
-    } while (op != 7);
+    } while (op != 8);
     return;
 }
 
@@ -736,8 +764,9 @@ void Users::userMovies()
     return;
 }
 
-void Users::userSeries(){
-     do
+void Users::userSeries()
+{
+    do
     {
         cout << "\n\n\t\tMENU SERIES \n\n";
         cout << "\n\tSELECCIONE LA OPCION DESEADA" << endl
@@ -773,36 +802,128 @@ void Users::ver(bool tipo)
     int opc;
     char _tipo;
     cout << "Que deseas hacer?" << endl
-         << "1 Ingresar ID a ver" << endl
-         << "2 Mostrar catalogo" << endl
-         << "3 Salir" << endl
+         << "[ 1 ] Ingresar ID a ver" << endl
+         << "[ 2 ] Mostrar catalogo" << endl
+         << "[ 3 ] Salir" << endl
          << "-> ";
-    cin >> opc;cin.ignore();
-    if(opc == 3){
+    cin >> opc;
+    cin.ignore();
+    if (opc == 3)
+    {
         return;
     }
     char watch[10];
-    if(opc == 2){
-        if(tipo){
+    if (opc == 2)
+    {
+        if (tipo)
+        {
             movies.Imprimir();
-        }else{
+        }
+        else
+        {
             serie.Mostrar();
         }
     }
-    cout<< "Ingresa ID: ";
+    cout << "Ingresa ID: ";
     cin.getline(watch, 10);
-    if(tipo){
-        if(movies.checkID(watch)==false){
-            cout<<"El ID no existe" << endl;
+    if (tipo)
+    {
+        if (movies.checkID(watch) == false)
+        {
+            cout << "El ID no existe" << endl;
             return;
         }
         _tipo = 'M';
-    }else{
-        if(serie.checkID(watch)==false){
-            cout<<"El ID no existe" << endl;
+    }
+    else
+    {
+        if (serie.checkID(watch) == false)
+        {
+            cout << "El ID no existe" << endl;
             return;
         }
         _tipo = 'S';
     }
     historial.setContent(userLog.id, watch, _tipo);
+}
+
+void Users::getHistorial(char _id[15])
+{
+    int band = 0;
+    ifstream a(".data\\datos.bin");
+    if (!a.good())
+    {
+        cout << "No existe el archivo" << endl;
+    }
+    else
+    {
+        while (!a.eof())
+        {
+            a.read((char *)&historial, sizeof(historial));
+            if (a.eof())
+            {
+                break;
+            }
+            if (strcmp(historial.userID, _id) == 0)
+            {
+                cout << "  HISTORIAL DEL ID #" << historial.userID << endl
+                     << "------------------------------------" << endl;
+                cout << "N : Tipo / ID --> Nombre" << endl;
+                for (int i = 0; i < historial.indxContent; i++)
+                {
+                    cout << "#" << i + 1 << ": " << historial.tipo[i] << " / " << historial.content[i] << " --> ";
+                    if (historial.tipo[i] == 'S')
+                    {
+                        cout << serie.getSerie(historial.content[i]) << endl;
+                    }
+                    else if (historial.tipo[i] == 'M')
+                    {
+                        cout << movies.getMovie(historial.content[i]) << endl;
+                    }
+                }
+                cout << "------------------------------------" << endl;
+                band = 1;
+                break;
+            }
+        }
+        if (band == 0)
+        {
+            cout << "\n NO EXISTE REGISTRO....." << endl;
+        }
+    }
+    a.close();
+}
+
+void Users::showHistorial()
+{
+    ifstream a(".data\\datos.bin");
+    if (!a.good())
+        cout << "No existe el archivo" << endl;
+    else
+    {
+        cout << "HISTORIALES EXISTENTES" << endl
+             << "----------------------------------" << endl;
+        while (!a.eof())
+        {
+            a.read((char *)&historial, sizeof(historial));
+            if (a.eof())
+                break;
+            cout << "ID:" << historial.userID << endl;
+            cout << "N : Tipo / ID --> Nombre" << endl;
+            for (int i = 0; i < historial.indxContent; i++)
+            {
+                cout << "#" << i + 1 << ": " << historial.tipo[i] << " / " << historial.content[i] << " --> ";
+                if (historial.tipo[i] == 'S')
+                {
+                    cout << serie.getSerie(historial.content[i]) << endl;
+                }
+                else if (historial.tipo[i] == 'M')
+                {
+                    cout << movies.getMovie(historial.content[i]) << endl;
+                }
+            }
+            cout << "------------------------------------" << endl;
+        }
+    }
+    a.close();
 }

@@ -3,7 +3,10 @@
 using namespace std;
 
 void Recovery(){
+    Pago recovery;
     listR.Recovery();
+    recovery.genera();
+    system("cls");
 }
 
 int main(){

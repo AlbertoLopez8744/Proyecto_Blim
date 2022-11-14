@@ -57,11 +57,11 @@ int cont = 0;
 void ListaRepro::Recovery()
 {
     int temp;
-    ifstream Archivo(".data\\CList.txt", ios::app);
+    ifstream Archivo(".data\\ListRep\\CList.txt", ios::app);
     if (!Archivo.good())
     {
         cout << "\nEl archivo no existe...";
-        ofstream Archivo(".data\\CList.txt", ios::app);
+        ofstream Archivo(".data\\ListRep\\CList.txt", ios::app);
         Archivo << 0;
     }
     else
@@ -71,7 +71,7 @@ void ListaRepro::Recovery()
     }
     Archivo.close();
     long int tempPos;
-    ifstream Top(".data\\IndListR.txt");
+    ifstream Top(".data\\ListRep\\IndListR.txt");
     if (!Top.good())
     {
     }
@@ -87,17 +87,17 @@ void ListaRepro::Recovery()
         }
     }
     y.pos = tempPos;
-    cout << y.pos << endl;
+    //cout << y.pos << endl;
     Top.close();
 }
 
 void ListaRepro::ChangeCont()
 {
-    ofstream temporal(".data\\tmp.txt", ios::app);
+    ofstream temporal(".data\\ListRep\\tmp.txt", ios::app);
     temporal << cont;
     temporal.close();
-    remove(".data\\CList.txt");
-    rename(".data\\tmp.txt", ".data\\CList.txt");
+    remove(".data\\ListRep\\CList.txt");
+    rename(".data\\ListRep\\tmp.txt", ".data\\ListRep\\CList.txt");
 }
 
 void ListaRepro::setList(char _idUser[15], char _idList[15], char _nameList[35])
@@ -142,7 +142,7 @@ void ListaRepro::capturar(char _idUser[15])
     cin.ignore();
     setContent(_space);
     cout << "------------------------------------" << endl;
-    ofstream a(".data\\ListDatabase.txt", ios::app);
+    ofstream a(".data\\ListRep\\ListDatabase.txt", ios::app);
     // cout << y.pos << endl;
     if (cont)
     {
@@ -157,7 +157,7 @@ void ListaRepro::capturar(char _idUser[15])
     a.close();
     strcpy(y.idList, idList);
     strcpy(y.idUser, idUser);
-    ofstream b(".data\\IndListR.txt", ios::app);
+    ofstream b(".data\\ListRep\\IndListR.txt", ios::app);
     b.write((char *)&y, sizeof(y));
     b.close();
     orden++;
@@ -170,7 +170,7 @@ void ListaRepro::capturar(char _idUser[15])
 
 void ListaRepro::mostrar()
 {
-    ifstream a(".data\\ListDatabase.txt");
+    ifstream a(".data\\ListRep\\ListDatabase.txt");
     if (!a.good())
         cout << "No existe el archivo";
     else
@@ -203,7 +203,7 @@ void ListaRepro::buscar()
 {
     char idListbus[14];
     int band = 0;
-    ifstream b(".data\\IndListR.txt");
+    ifstream b(".data\\ListRep\\IndListR.txt");
     if (!b.good())
     {
         cout << "No existe el archivo";
@@ -225,7 +225,7 @@ void ListaRepro::buscar()
             {
                 if (strcmp(y.idList, idListbus) == 0)
                 {
-                    ifstream a(".data\\ListDatabase.txt");
+                    ifstream a(".data\\ListRep\\ListDatabase.txt");
                     a.seekg(y.pos, ios::beg);
                     a.read((char *)&listR, sizeof(listR));
                     cout << "  Lista de Reproduccion encontrada" << endl
@@ -256,10 +256,10 @@ void ListaRepro::Modificar()
     char idListmod[15];
     int band = 0;
     int opc;
-    ifstream indice(".data\\IndListR.txt");
-    ifstream datos(".data\\ListDatabase.txt");
-    ofstream c(".data\\temp.txt", ios::app);
-    ofstream d(".data\\tempind.txt", ios::app);
+    ifstream indice(".data\\ListRep\\IndListR.txt");
+    ifstream datos(".data\\ListRep\\ListDatabase.txt");
+    ofstream c(".data\\ListRep\\temp.txt", ios::app);
+    ofstream d(".data\\ListRep\\tempind.txt", ios::app);
     if (!indice.good())
     {
         cout << "No existe el archivo";
@@ -418,10 +418,10 @@ void ListaRepro::Modificar()
     cout << "       GUARDANDO CAMBIOS.....    " << endl
          << " POR FAVOR NO CIERRE EL PROGRAMA " << endl;
     cout << "*********************************" << endl;
-    remove(".data\\IndListR.txt");
-    rename(".data\\tempind.txt", ".data\\IndListR.txt");
-    remove(".data\\ListDatabase.txt");
-    rename(".data\\temp.txt", ".data\\ListDatabase.txt");
+    remove(".data\\ListRep\\IndListR.txt");
+    rename(".data\\ListRep\\tempind.txt", ".data\\ListRep\\IndListR.txt");
+    remove(".data\\ListRep\\ListDatabase.txt");
+    rename(".data\\ListRep\\temp.txt", ".data\\ListRep\\ListDatabase.txt");
 }
 
 void ListaRepro::Eliminar()
@@ -430,7 +430,7 @@ void ListaRepro::Eliminar()
     int band = 0;
     int opc, cont1 = 0, cont2 = 0;
     long int tempPos;
-    ifstream b(".data\\IndListR.txt");
+    ifstream b(".data\\ListRep\\IndListR.txt");
     if (!b.good())
     {
         cout << "No existe el archivo";
@@ -453,7 +453,7 @@ void ListaRepro::Eliminar()
             {
                 if (strcmp(y.idList, idListeli) == 0)
                 {
-                    ifstream a(".data\\ListDatabase.txt");
+                    ifstream a(".data\\ListRep\\ListDatabase.txt");
                     a.seekg(y.pos, ios::beg);
                     a.read((char *)&listR, sizeof(listR));
                     if (a.eof())
@@ -480,8 +480,8 @@ void ListaRepro::Eliminar()
         b.close();
         if (opc == 1)
         {
-            ifstream indice(".data\\IndListR.txt");
-            ifstream datos(".data\\ListDatabase.txt");
+            ifstream indice(".data\\ListRep\\IndListR.txt");
+            ifstream datos(".data\\ListRep\\ListDatabase.txt");
             while (!indice.eof())
             {
                 indice.read((char *)&y, sizeof(y));
@@ -495,14 +495,14 @@ void ListaRepro::Eliminar()
                     if (strcmp(y.idList, idListeli))
                     {
                         cont2++;
-                        ofstream c(".data\\temp.txt", ios::app);
+                        ofstream c(".data\\ListRep\\temp.txt", ios::app);
                         c.write((char *)&listR, sizeof(listR));
                         strcpy(y.idList, idList);
                         if (tempPos < y.pos)
                         {
                             y.pos = y.pos - sizeof(listR);
                         }
-                        ofstream d(".data\\tempind.txt", ios::app);
+                        ofstream d(".data\\ListRep\\tempind.txt", ios::app);
                         d.write((char *)&y, sizeof(y));
                         d.close();
                         c.close();
@@ -511,10 +511,10 @@ void ListaRepro::Eliminar()
             } // while archivo
             indice.close();
             datos.close();
-            remove(".data\\IndListR.txt");
-            rename(".data\\tempind.txt", ".data\\IndListR.txt");
-            remove(".data\\ListDatabase.txt");
-            rename(".data\\temp.txt", ".data\\ListDatabase.txt");
+            remove(".data\\ListRep\\IndListR.txt");
+            rename(".data\\ListRep\\tempind.txt", ".data\\ListRep\\IndListR.txt");
+            remove(".data\\ListRep\\ListDatabase.txt");
+            rename(".data\\ListRep\\temp.txt", ".data\\ListRep\\ListDatabase.txt");
         } // if
         else
         {
@@ -533,7 +533,7 @@ void ListaRepro::Eliminar()
 
 void ListaRepro::Mostrar_Indice()
 {
-    ifstream a(".data\\IndListR.txt");
+    ifstream a(".data\\ListRep\\IndListR.txt");
     if (!a.good())
         cout << "No existe el archivo";
     else

@@ -14,6 +14,7 @@ public:
     void Buscar();
     void Eliminar();
     void Modificar();
+    string getMovie(char _id[10]);    
     void setters(char *, char *, char *, char *, char *);
     void adminMovies();
 }movies;
@@ -32,9 +33,10 @@ void Movie::Capturar()
     do
     {
         cout << "\nCodigo: ";
-
         cin.getline(_codigo, 10);
         verified = checkID(_codigo);
+        if(verified)
+            cout << "Se encontraron coincidencias por favor intente con otro codigo"<< endl;
     } while (verified);
     cout << "\nNombre: ";
     cin.getline(_nombre, 100);
@@ -57,7 +59,6 @@ bool Movie::checkID(char *_codigo)
     buffer1 = _codigo;
     ifstream arc(".data\\Peliculas.txt");
     if (!arc.good()){
-        //cout << "\nEl archivo no existe";
     }else
     {
         while (!arc.eof())
@@ -67,10 +68,7 @@ bool Movie::checkID(char *_codigo)
             if (arc.eof())
                 break;
             if (buffer1 == buffer2)
-            {
-                cout << "Se encontraron coincidencias por favor intente con otro codigo";
                 band = true;
-            }
         }
     }
     arc.close();
@@ -132,6 +130,30 @@ void Movie::Buscar()
             cout << "\nNo se encontro el Movie";
     }
     arc.close();
+}
+
+string Movie::getMovie(char _id[10]){
+    string movie;
+    bool band = false;
+    ifstream arc(".data\\Peliculas.txt");
+    if (!arc.good())
+        cout << "\nEl archivo no existe";
+    else
+    {
+        while (!arc.eof() && !band)
+        {
+            arc.read((char *)&movies, sizeof(movies));
+            if (arc.eof())
+                break;
+            if (strcmp(codigo, _id) == 0)
+            {
+                movie = nombre;
+                band = true;
+            }
+        }
+    }
+    arc.close();
+    return movie;
 }
 
 void Movie::Eliminar()
