@@ -71,15 +71,10 @@ public:
 char *Users::cifrar(char *t, int clave)
 {
     int size = strlen(t);
-    // cout<<"SIZE: " <<size <<endl
-    //<< "Sin: "<< t << endl;
     for (int i = 0; i < size; i++)
     {
         t[i] += clave;
     }
-    // cout<<"Con: "<< t;
-    // system("pause");
-
     return t;
 }
 char *Users::descifrar(char *t, int clave)
@@ -716,12 +711,12 @@ void Users::menuUser()
             break;
         case 6:
             system("cls");
-            OrdCom.Modificar();
+            userPay.AdminPay();
             system("pause");
             break;
         case 7:
             system("cls");
-            userPay.AdminPay();
+            OrdCom.Modificar();
             system("Pause");
         }
     } while (op != 8);

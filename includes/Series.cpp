@@ -18,8 +18,7 @@ public:
     string getSerie(char _id[10]);
     void setters(char *, char *, char *, char *, char *, char *);
     void adminSeries();
-   // void userSeries(char _id[15]);
-}serie;
+} serie;
 
 int opc = 0;
 
@@ -67,7 +66,7 @@ void Series::Agregar()
         cout << "ESCRIBE EL CODIGO DE LA SERIE: ";
         cin.getline(_codigo, 10);
         verified = checkID(_codigo);
-        if(verified)
+        if (verified)
             cout << "Se encontraron coincidencias por favor intente con otro codigo" << endl;
     } while (verified);
     cout << "ESCRIBE EL NOMBRE DE LA SERIE: ";
@@ -89,7 +88,6 @@ void Series::Agregar()
 void Series::Mostrar()
 {
     system("cls");
-
     ifstream archivo(".data\\Series.txt");
     if (!archivo.good())
     {
@@ -99,11 +97,15 @@ void Series::Mostrar()
     {
         while (!archivo.eof())
         {
-            archivo.read((char *)&serie, sizeof(serie)); // dim1 contiene el tama o de la cadena que se quiere leer
+            archivo.read((char *)&serie, sizeof(serie));
             if (archivo.eof())
                 break;
-            cout << "Codigo: " << codigo << "\nNombre: " << nombre << "\nDescripcio: " << descripcion << "\nTemporadas:  " << temporadas << "\nCapitulos: " << capitulos << "\nPublico Objetivo: " << publicObj << endl
-                 << endl;
+            cout << "Codigo: " << codigo << endl
+                 << "Nombre: " << nombre << endl
+                 << "Descripcio: " << descripcion << endl
+                 << "Temporadas:  " << temporadas << endl
+                 << "Capitulos: " << capitulos << endl
+                 << "Publico Objetivo: " << publicObj << endl;
         }
     }
     archivo.close();
@@ -112,7 +114,6 @@ void Series::Modificar()
 {
     int band = 0;
     char codigo2[10];
-
     ifstream archivo(".data\\Series.txt");
     ofstream temporal(".data\\Stemporal.txt", ios::app);
     if (!archivo.good())
@@ -121,11 +122,11 @@ void Series::Modificar()
     }
     else
     {
-        cout << "escribe el codigo del producto: ";
+        cout << "Escribe el codigo de la Serie: ";
         cin.getline(codigo2, 10);
         while (!archivo.eof())
         {
-            archivo.read((char *)&serie, sizeof(serie)); // dim1 contiene el tama o de la cadena que se quiere leer
+            archivo.read((char *)&serie, sizeof(serie));
             if (archivo.eof())
                 break;
             if (strcmp(codigo2, codigo) == 0)
@@ -219,8 +220,12 @@ void Series::Eliminar()
                 break;
             if (strcmp(codigo2, codigo) == 0)
             {
-                cout << "Codigo: " << codigo << "\nNombre: " << nombre << "\nDescripcio: " << descripcion << "\nTemporadas:  " << temporadas << "\nCapitulos: " << capitulos << "\nPublico Objetivo: " << publicObj << endl
-                     << endl;
+                cout << "Codigo: " << codigo << endl
+                     << "Nombre: " << nombre << endl
+                     << "Descripcio: " << descripcion << endl
+                     << "Temporadas:  " << temporadas << endl
+                     << "Capitulos: " << capitulos << endl
+                     << "Publico Objetivo: " << publicObj << endl;
                 band = 1;
                 cout << "DESEAS ELIMINAR?\n1.- SI\n0.- NO\n>: ";
                 cin >> opc;
@@ -276,8 +281,12 @@ void Series::Buscar()
                 break;
             if (strcmpi(codigo2, codigo) == 0)
             {
-                cout << "Codigo: " << codigo << "\nNombre: " << nombre << "\nDescripcion: " << descripcion << "\nTemporadas:  " << temporadas << "\nCapitulos: " << capitulos << "\nPublico Objetivo: " << publicObj << endl
-                     << endl;
+                cout << "Codigo: " << codigo << endl
+                     << "Nombre: " << nombre << endl
+                     << "Descripcio: " << descripcion << endl
+                     << "Temporadas:  " << temporadas << endl
+                     << "Capitulos: " << capitulos << endl
+                     << "Publico Objetivo: " << publicObj << endl;
                 band = 1;
             }
         }
@@ -350,4 +359,3 @@ void Series::adminSeries()
     } while (opc != 6);
     return;
 }
-
